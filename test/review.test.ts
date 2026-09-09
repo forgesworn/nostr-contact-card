@@ -21,7 +21,7 @@ const enc = (o: unknown) => Buffer.from(JSON.stringify(o)).toString('base64url')
 const contentOf = (c: Card) => ({ rz: c.rz, ...(c.name !== undefined ? { name: c.name } : {}), relays: c.relays, boxes: c.boxes, eph: c.eph, ...(c.attest !== undefined ? { attest: c.attest } : {}), ...(c.bond !== undefined ? { bond: c.bond } : {}) })
 /** Sign an arbitrary content string as a card event under `identity`: what a card with extras inside its signed content looks like. */
 const signed = (content: string, ev: Partial<CardEvent> = {}): CardEvent => {
-  const base = { kind: CARD_KIND, pubkey: p, created_at: good.issued, tags: [['d', 'card'], ['expiration', String(good.expires)]], content, ...ev }
+  const base = { kind: CARD_KIND, pubkey: p, created_at: good.issued, tags: [['expiration', String(good.expires)]], content, ...ev }
   const id = eventId(base)
   return { ...base, id, sig: bytesToHex(schnorr.sign(hexToBytes(id), identity)) }
 }

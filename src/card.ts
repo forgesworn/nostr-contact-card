@@ -5,7 +5,7 @@ import { bytesToHex, hexToBytes, utf8ToBytes } from '@noble/hashes/utils.js'
 import { verifyLinkCard, isRelayUrl, type LinkCard } from './link-card.js'
 
 /** The reserved addressable kind a card rides in. Never published to a relay. */
-export const CARD_KIND = 30641
+export const CARD_KIND = 21641
 export const MAX_CARD_BYTES = 16 * 1024
 export const MAX_AGE_SECONDS = 30 * 24 * 3600
 export const MAX_RELAYS = 8
@@ -96,7 +96,7 @@ export function cardContent(c: Omit<UnsignedCard, 'p' | 'issued' | 'expires'>): 
 
 /** The unsigned event for a card, ready for a signer. */
 export function cardEvent(c: UnsignedCard): UnsignedCardEvent {
-  return { kind: CARD_KIND, pubkey: c.p, created_at: c.issued, tags: [['d', 'card'], ['expiration', String(c.expires)]], content: cardContent(c) }
+  return { kind: CARD_KIND, pubkey: c.p, created_at: c.issued, tags: [['expiration', String(c.expires)]], content: cardContent(c) }
 }
 
 const HEX64 = /^[0-9a-f]{64}$/, HEX128 = /^[0-9a-f]{128}$/, HEX32 = /^[0-9a-f]{32}$/
@@ -311,11 +311,11 @@ export function readCard(encoded: string, now: number): ReadResult {
   if (typeof ev.sig !== 'string') return { ok: false, step: 2, reason: 'sig' }
   const sig = ev.sig.toLowerCase()
   if (!HEX128.test(sig)) return { ok: false, step: 2, reason: 'sig' }
-  // Exactly a `d` of `card` and one `expiration`, nothing else: a tag is inside the signature, and a third could carry what a card may not.
-  if (!Array.isArray(ev.tags) || ev.tags.length !== 2 || !ev.tags.every((t: unknown) => Array.isArray(t) && t.length === 2 && t.every((x) => typeof x === 'string'))) return { ok: false, step: 2, reason: 'tags' }
+  // Exactly one `expiration` and nothing else: a tag is inside the signature, and a second could carry what a card may not.
+  if (!Array.isArray(ev.tags) || ev.tags.length !== 1 || !ev.tags.every((t: unknown) => Array.isArray(t) && t.length === 2 && t.every((x) => typeof x === 'string'))) return { ok: false, step: 2, reason: 'tags' }
   const tags = ev.tags as string[][]
-  const dTag = tags.find((t) => t[0] === 'd'), expTag = tags.find((t) => t[0] === 'expiration')
-  if (!dTag || !expTag || dTag[1] !== 'card') return { ok: false, step: 2, reason: 'tags' }
+  const expTag = tags[0]!
+  if (expTag[0] !== 'expiration') return { ok: false, step: 2, reason: 'tags' }
   const hex: Record<'rz' | 'eph', string> = { rz: '', eph: '' }
   for (const f of ['rz', 'eph'] as const) {
     if (typeof c[f] !== 'string') return { ok: false, step: 2, reason: f }
