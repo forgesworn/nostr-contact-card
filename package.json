@@ -1,6 +1,6 @@
 {
   "name": "nostr-contact-card",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "One QR or link that makes a stranger a contact, names their box, and starts a bond. Build, sign, read and refresh contact cards; verify the Link address card inside.",
   "type": "module",
   "main": "./dist/index.js",

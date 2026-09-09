@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 (2026-09-09)
+
+### Features
+
+- a card is a signed event of kind 30641, so any signer can make one
+
+
+
 ## 0.2.0 (2026-09-09)
 
 ### Features
