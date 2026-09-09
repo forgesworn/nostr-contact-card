@@ -18,7 +18,7 @@ describe('known-answer vectors from the draft', () => {
   }
   for (const c of v.refresh.cases) {
     it(`refresh ${c.name}`, () => {
-      expect(refreshBox(c.pinnedNodeId ?? v.refresh.pinnedNodeId, new Uint8Array(Buffer.from(c.card, 'base64url')), v.refresh.later).ok).toBe(c.expect.ok)
+      expect(refreshBox(c.pinnedNodeId ?? v.refresh.pinnedNodeId, new Uint8Array(Buffer.from(c.card, 'base64url')), v.refresh.later, c.highestSerial).ok).toBe(c.expect.ok)
     })
   }
 })
