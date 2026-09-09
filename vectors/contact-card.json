@@ -1,0 +1,414 @@
+{
+  "format": "nostr-contact-card-known-answer-v1",
+  "note": "Signatures use random auxiliary data; verify, do not compare. The Link node key here is test-only and the claim id is a placeholder.",
+  "now": 1793577600,
+  "testOnlyKeys": {
+    "aPrivHex": "4873374aacd9fbbdf073a29078b6cf9f27c137107530c521458d5d83118ae733",
+    "aPub": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+    "ephAPrivHex": "daced59710de58fd5864e6821629414261d33addd59ceff45ffd2fba37dc5f4d",
+    "ephAPub": "d6bd3b313d2cbc4f0b2355179911bd45747e6bd1024b9fead9a72e914a28e827",
+    "boxPrivHex": "d1be49b906d68d1228f291fec7f9e373e7fc282605ed63763ad03cd53aa853f0",
+    "boxPub": "3e27f135286b183bb5dbc6e59a0ccc4a10750302b6ab68ac7495b3c5193012ec",
+    "linkNodeSecretHex": "8f2b5a94f17bec15e6da441bad23accd776e67d408fdc1683f41e91596c5c42f"
+  },
+  "cases": [
+    {
+      "name": "passes",
+      "expect": {
+        "ok": true
+      },
+      "encoded": "eyJ2IjoxLCJwIjoiM2UwYjE0Nzg1MmRkZDM1NjA3YTA2YjRiYjU2ZmZjMTAyZTRkN2IzZWNlMTYyMDQyYzNmMzJmOTZhNDljNDYxMyIsInJ6IjoiOTViMWQyM2U4ZTFjZjkxN2IzNDg2ZTliYjUzZGQxZTRlMTM1NWQ5MWIxZmUyNTM1ZTgwYTc4OWRhZDcxNGRlZCIsIm5hbWUiOiJBZGEiLCJpc3N1ZWQiOjE3OTM1Nzc1NDAsImV4cGlyZXMiOjE3OTQ3ODcyMDAsInJlbGF5cyI6WyJ3c3M6Ly9yZWxheS5leGFtcGxlLm9yZyIsIndzczovL25vcy5leGFtcGxlIl0sImJveGVzIjpbeyJwIjoiM2UyN2YxMzUyODZiMTgzYmI1ZGJjNmU1OWEwY2NjNGExMDc1MDMwMmI2YWI2OGFjNzQ5NWIzYzUxOTMwMTJlYyIsImNsYWltIjoiYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMSIsImNhcmQiOiJSbE5NTVFFN1F4YlB6NnNxbDVHN3VKdkJYaUd5QlRHcUFIWWZLN1lVSDJvajFJTmxGd0FBQUFCcTU5SkVBQUFBQUdydnU0QUFBQUFBQUFBQUJ3SUJBQmQzYzNNNkx5OXlaV3hoZVM1bGVHRnRjR3hsTG05eVp3TUFPbUZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoQWJ1MVVjYmRjQmRVTlVVXzgxS2NsNU5VTEhKVUl0SzE2VmROTFdyWW5ybnpGYmNTb3ZMdmtOcHNWUVdWX3FCbUEyQVpRUV9KeDlfMFoycjUxUFBZeWZBTiIsImNhcnJpZXJzIjpbInRvciIsImkycCJdfV0sImVwaCI6ImQ2YmQzYjMxM2QyY2JjNGYwYjIzNTUxNzk5MTFiZDQ1NzQ3ZTZiZDEwMjRiOWZlYWQ5YTcyZTkxNGEyOGU4MjciLCJhdHRlc3QiOiJuYWRkcjFleGFtcGxlIiwiYm9uZCI6eyJwdWJrZXkiOiIzZTBiMTQ3ODUyZGRkMzU2MDdhMDZiNGJiNTZmZmMxMDJlNGQ3YjNlY2UxNjIwNDJjM2YzMmY5NmE0OWM0NjEzIiwiZGlzcGxheU5hbWUiOiJBZGEiLCJub25jZSI6IjAwMTEyMjMzNDQ1NTY2Nzc4ODk5YWFiYmNjZGRlZWZmIn0sInNpZyI6IjRiYzkzNDcwNWRjODg5YzUxNTlkMTk1YzA0NDllODI0YTAyZjQyNWQzNmNkOGYyMmVmYWRjMDc3NGUwODIzMTljODQ1NTJjM2U1OTE5YTJhNDRiYmMzODliMTkyNjhhNDcxMDc4NDZlNGJjYmM4NjdmMmNiOTBhOTA1YjdiNDZkIn0",
+      "card": {
+        "v": 1,
+        "p": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+        "rz": "95b1d23e8e1cf917b3486e9bb53dd1e4e1355d91b1fe2535e80a789dad714ded",
+        "name": "Ada",
+        "issued": 1793577540,
+        "expires": 1794787200,
+        "relays": [
+          "wss://relay.example.org",
+          "wss://nos.example"
+        ],
+        "boxes": [
+          {
+            "p": "3e27f135286b183bb5dbc6e59a0ccc4a10750302b6ab68ac7495b3c5193012ec",
+            "claim": "c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1",
+            "card": "RlNMMQE7QxbPz6sql5G7uJvBXiGyBTGqAHYfK7YUH2oj1INlFwAAAABq59JEAAAAAGrvu4AAAAAAAAAABwIBABd3c3M6Ly9yZWxheS5leGFtcGxlLm9yZwMAOmFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhAbu1UcbdcBdUNUU_81Kcl5NULHJUItK16VdNLWrYnrnzFbcSovLvkNpsVQWV_qBmA2AZQQ_Jx9_0Z2r51PPYyfAN",
+            "carriers": [
+              "tor",
+              "i2p"
+            ]
+          }
+        ],
+        "eph": "d6bd3b313d2cbc4f0b2355179911bd45747e6bd1024b9fead9a72e914a28e827",
+        "attest": "naddr1example",
+        "bond": {
+          "pubkey": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+          "displayName": "Ada",
+          "nonce": "00112233445566778899aabbccddeeff"
+        },
+        "sig": "4bc934705dc889c5159d195c0449e824a02f425d36cd8f22efadc0774e082319c84552c3e5919a2a44bbc389b19268a47107846e4bcbc867f2cb90a905b7b46d"
+      }
+    },
+    {
+      "name": "wrong-version",
+      "expect": {
+        "ok": false,
+        "step": 1
+      },
+      "encoded": "eyJ2IjoyLCJwIjoiM2UwYjE0Nzg1MmRkZDM1NjA3YTA2YjRiYjU2ZmZjMTAyZTRkN2IzZWNlMTYyMDQyYzNmMzJmOTZhNDljNDYxMyIsInJ6IjoiOTViMWQyM2U4ZTFjZjkxN2IzNDg2ZTliYjUzZGQxZTRlMTM1NWQ5MWIxZmUyNTM1ZTgwYTc4OWRhZDcxNGRlZCIsIm5hbWUiOiJBZGEiLCJpc3N1ZWQiOjE3OTM1Nzc1NDAsImV4cGlyZXMiOjE3OTQ3ODcyMDAsInJlbGF5cyI6WyJ3c3M6Ly9yZWxheS5leGFtcGxlLm9yZyIsIndzczovL25vcy5leGFtcGxlIl0sImJveGVzIjpbeyJwIjoiM2UyN2YxMzUyODZiMTgzYmI1ZGJjNmU1OWEwY2NjNGExMDc1MDMwMmI2YWI2OGFjNzQ5NWIzYzUxOTMwMTJlYyIsImNsYWltIjoiYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMSIsImNhcmQiOiJSbE5NTVFFN1F4YlB6NnNxbDVHN3VKdkJYaUd5QlRHcUFIWWZLN1lVSDJvajFJTmxGd0FBQUFCcTU5SkVBQUFBQUdydnU0QUFBQUFBQUFBQUJ3SUJBQmQzYzNNNkx5OXlaV3hoZVM1bGVHRnRjR3hsTG05eVp3TUFPbUZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoQWJ1MVVjYmRjQmRVTlVVXzgxS2NsNU5VTEhKVUl0SzE2VmROTFdyWW5ybnpGYmNTb3ZMdmtOcHNWUVdWX3FCbUEyQVpRUV9KeDlfMFoycjUxUFBZeWZBTiIsImNhcnJpZXJzIjpbInRvciIsImkycCJdfV0sImVwaCI6ImQ2YmQzYjMxM2QyY2JjNGYwYjIzNTUxNzk5MTFiZDQ1NzQ3ZTZiZDEwMjRiOWZlYWQ5YTcyZTkxNGEyOGU4MjciLCJhdHRlc3QiOiJuYWRkcjFleGFtcGxlIiwiYm9uZCI6eyJwdWJrZXkiOiIzZTBiMTQ3ODUyZGRkMzU2MDdhMDZiNGJiNTZmZmMxMDJlNGQ3YjNlY2UxNjIwNDJjM2YzMmY5NmE0OWM0NjEzIiwiZGlzcGxheU5hbWUiOiJBZGEiLCJub25jZSI6IjAwMTEyMjMzNDQ1NTY2Nzc4ODk5YWFiYmNjZGRlZWZmIn0sInNpZyI6IjRiYzkzNDcwNWRjODg5YzUxNTlkMTk1YzA0NDllODI0YTAyZjQyNWQzNmNkOGYyMmVmYWRjMDc3NGUwODIzMTljODQ1NTJjM2U1OTE5YTJhNDRiYmMzODliMTkyNjhhNDcxMDc4NDZlNGJjYmM4NjdmMmNiOTBhOTA1YjdiNDZkIn0",
+      "card": {
+        "v": 2,
+        "p": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+        "rz": "95b1d23e8e1cf917b3486e9bb53dd1e4e1355d91b1fe2535e80a789dad714ded",
+        "name": "Ada",
+        "issued": 1793577540,
+        "expires": 1794787200,
+        "relays": [
+          "wss://relay.example.org",
+          "wss://nos.example"
+        ],
+        "boxes": [
+          {
+            "p": "3e27f135286b183bb5dbc6e59a0ccc4a10750302b6ab68ac7495b3c5193012ec",
+            "claim": "c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1",
+            "card": "RlNMMQE7QxbPz6sql5G7uJvBXiGyBTGqAHYfK7YUH2oj1INlFwAAAABq59JEAAAAAGrvu4AAAAAAAAAABwIBABd3c3M6Ly9yZWxheS5leGFtcGxlLm9yZwMAOmFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhAbu1UcbdcBdUNUU_81Kcl5NULHJUItK16VdNLWrYnrnzFbcSovLvkNpsVQWV_qBmA2AZQQ_Jx9_0Z2r51PPYyfAN",
+            "carriers": [
+              "tor",
+              "i2p"
+            ]
+          }
+        ],
+        "eph": "d6bd3b313d2cbc4f0b2355179911bd45747e6bd1024b9fead9a72e914a28e827",
+        "attest": "naddr1example",
+        "bond": {
+          "pubkey": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+          "displayName": "Ada",
+          "nonce": "00112233445566778899aabbccddeeff"
+        },
+        "sig": "4bc934705dc889c5159d195c0449e824a02f425d36cd8f22efadc0774e082319c84552c3e5919a2a44bbc389b19268a47107846e4bcbc867f2cb90a905b7b46d"
+      }
+    },
+    {
+      "name": "bad-hex",
+      "expect": {
+        "ok": false,
+        "step": 2
+      },
+      "encoded": "eyJ2IjoxLCJwIjoiM2UwYjE0Nzg1MmRkZDM1NjA3YTA2YjRiYjU2ZmZjMTAyZTRkN2IzZWNlMTYyMDQyYzNmMzJmOTZhNDljNDYxMyIsInJ6IjoiOTViMWQyM2U4ZTFjZjkxN2IzNDg2ZTliYjUzZGQxZTRlMTM1NWQ5MWIxZmUyNTM1ZTgwYTc4OWRhZDcxNGRlZCIsIm5hbWUiOiJBZGEiLCJpc3N1ZWQiOjE3OTM1Nzc1NDAsImV4cGlyZXMiOjE3OTQ3ODcyMDAsInJlbGF5cyI6WyJ3c3M6Ly9yZWxheS5leGFtcGxlLm9yZyIsIndzczovL25vcy5leGFtcGxlIl0sImJveGVzIjpbeyJwIjoiM2UyN2YxMzUyODZiMTgzYmI1ZGJjNmU1OWEwY2NjNGExMDc1MDMwMmI2YWI2OGFjNzQ5NWIzYzUxOTMwMTJlYyIsImNsYWltIjoiYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMSIsImNhcmQiOiJSbE5NTVFFN1F4YlB6NnNxbDVHN3VKdkJYaUd5QlRHcUFIWWZLN1lVSDJvajFJTmxGd0FBQUFCcTU5SkVBQUFBQUdydnU0QUFBQUFBQUFBQUJ3SUJBQmQzYzNNNkx5OXlaV3hoZVM1bGVHRnRjR3hsTG05eVp3TUFPbUZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoQWJ1MVVjYmRjQmRVTlVVXzgxS2NsNU5VTEhKVUl0SzE2VmROTFdyWW5ybnpGYmNTb3ZMdmtOcHNWUVdWX3FCbUEyQVpRUV9KeDlfMFoycjUxUFBZeWZBTiIsImNhcnJpZXJzIjpbInRvciIsImkycCJdfV0sImVwaCI6Inp6YmQzYjMxM2QyY2JjNGYwYjIzNTUxNzk5MTFiZDQ1NzQ3ZTZiZDEwMjRiOWZlYWQ5YTcyZTkxNGEyOGU4MjciLCJhdHRlc3QiOiJuYWRkcjFleGFtcGxlIiwiYm9uZCI6eyJwdWJrZXkiOiIzZTBiMTQ3ODUyZGRkMzU2MDdhMDZiNGJiNTZmZmMxMDJlNGQ3YjNlY2UxNjIwNDJjM2YzMmY5NmE0OWM0NjEzIiwiZGlzcGxheU5hbWUiOiJBZGEiLCJub25jZSI6IjAwMTEyMjMzNDQ1NTY2Nzc4ODk5YWFiYmNjZGRlZWZmIn0sInNpZyI6IjRiYzkzNDcwNWRjODg5YzUxNTlkMTk1YzA0NDllODI0YTAyZjQyNWQzNmNkOGYyMmVmYWRjMDc3NGUwODIzMTljODQ1NTJjM2U1OTE5YTJhNDRiYmMzODliMTkyNjhhNDcxMDc4NDZlNGJjYmM4NjdmMmNiOTBhOTA1YjdiNDZkIn0",
+      "card": {
+        "v": 1,
+        "p": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+        "rz": "95b1d23e8e1cf917b3486e9bb53dd1e4e1355d91b1fe2535e80a789dad714ded",
+        "name": "Ada",
+        "issued": 1793577540,
+        "expires": 1794787200,
+        "relays": [
+          "wss://relay.example.org",
+          "wss://nos.example"
+        ],
+        "boxes": [
+          {
+            "p": "3e27f135286b183bb5dbc6e59a0ccc4a10750302b6ab68ac7495b3c5193012ec",
+            "claim": "c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1",
+            "card": "RlNMMQE7QxbPz6sql5G7uJvBXiGyBTGqAHYfK7YUH2oj1INlFwAAAABq59JEAAAAAGrvu4AAAAAAAAAABwIBABd3c3M6Ly9yZWxheS5leGFtcGxlLm9yZwMAOmFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhAbu1UcbdcBdUNUU_81Kcl5NULHJUItK16VdNLWrYnrnzFbcSovLvkNpsVQWV_qBmA2AZQQ_Jx9_0Z2r51PPYyfAN",
+            "carriers": [
+              "tor",
+              "i2p"
+            ]
+          }
+        ],
+        "eph": "zzbd3b313d2cbc4f0b2355179911bd45747e6bd1024b9fead9a72e914a28e827",
+        "attest": "naddr1example",
+        "bond": {
+          "pubkey": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+          "displayName": "Ada",
+          "nonce": "00112233445566778899aabbccddeeff"
+        },
+        "sig": "4bc934705dc889c5159d195c0449e824a02f425d36cd8f22efadc0774e082319c84552c3e5919a2a44bbc389b19268a47107846e4bcbc867f2cb90a905b7b46d"
+      }
+    },
+    {
+      "name": "comma-in-relay",
+      "expect": {
+        "ok": false,
+        "step": 2
+      },
+      "encoded": "eyJ2IjoxLCJwIjoiM2UwYjE0Nzg1MmRkZDM1NjA3YTA2YjRiYjU2ZmZjMTAyZTRkN2IzZWNlMTYyMDQyYzNmMzJmOTZhNDljNDYxMyIsInJ6IjoiOTViMWQyM2U4ZTFjZjkxN2IzNDg2ZTliYjUzZGQxZTRlMTM1NWQ5MWIxZmUyNTM1ZTgwYTc4OWRhZDcxNGRlZCIsIm5hbWUiOiJBZGEiLCJpc3N1ZWQiOjE3OTM1Nzc1NDAsImV4cGlyZXMiOjE3OTQ3ODcyMDAsInJlbGF5cyI6WyJ3c3M6Ly9hLmV4YW1wbGUsd3NzOi8vYi5leGFtcGxlIl0sImJveGVzIjpbeyJwIjoiM2UyN2YxMzUyODZiMTgzYmI1ZGJjNmU1OWEwY2NjNGExMDc1MDMwMmI2YWI2OGFjNzQ5NWIzYzUxOTMwMTJlYyIsImNsYWltIjoiYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMSIsImNhcmQiOiJSbE5NTVFFN1F4YlB6NnNxbDVHN3VKdkJYaUd5QlRHcUFIWWZLN1lVSDJvajFJTmxGd0FBQUFCcTU5SkVBQUFBQUdydnU0QUFBQUFBQUFBQUJ3SUJBQmQzYzNNNkx5OXlaV3hoZVM1bGVHRnRjR3hsTG05eVp3TUFPbUZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoQWJ1MVVjYmRjQmRVTlVVXzgxS2NsNU5VTEhKVUl0SzE2VmROTFdyWW5ybnpGYmNTb3ZMdmtOcHNWUVdWX3FCbUEyQVpRUV9KeDlfMFoycjUxUFBZeWZBTiIsImNhcnJpZXJzIjpbInRvciIsImkycCJdfV0sImVwaCI6ImQ2YmQzYjMxM2QyY2JjNGYwYjIzNTUxNzk5MTFiZDQ1NzQ3ZTZiZDEwMjRiOWZlYWQ5YTcyZTkxNGEyOGU4MjciLCJhdHRlc3QiOiJuYWRkcjFleGFtcGxlIiwiYm9uZCI6eyJwdWJrZXkiOiIzZTBiMTQ3ODUyZGRkMzU2MDdhMDZiNGJiNTZmZmMxMDJlNGQ3YjNlY2UxNjIwNDJjM2YzMmY5NmE0OWM0NjEzIiwiZGlzcGxheU5hbWUiOiJBZGEiLCJub25jZSI6IjAwMTEyMjMzNDQ1NTY2Nzc4ODk5YWFiYmNjZGRlZWZmIn0sInNpZyI6IjRiYzkzNDcwNWRjODg5YzUxNTlkMTk1YzA0NDllODI0YTAyZjQyNWQzNmNkOGYyMmVmYWRjMDc3NGUwODIzMTljODQ1NTJjM2U1OTE5YTJhNDRiYmMzODliMTkyNjhhNDcxMDc4NDZlNGJjYmM4NjdmMmNiOTBhOTA1YjdiNDZkIn0",
+      "card": {
+        "v": 1,
+        "p": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+        "rz": "95b1d23e8e1cf917b3486e9bb53dd1e4e1355d91b1fe2535e80a789dad714ded",
+        "name": "Ada",
+        "issued": 1793577540,
+        "expires": 1794787200,
+        "relays": [
+          "wss://a.example,wss://b.example"
+        ],
+        "boxes": [
+          {
+            "p": "3e27f135286b183bb5dbc6e59a0ccc4a10750302b6ab68ac7495b3c5193012ec",
+            "claim": "c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1",
+            "card": "RlNMMQE7QxbPz6sql5G7uJvBXiGyBTGqAHYfK7YUH2oj1INlFwAAAABq59JEAAAAAGrvu4AAAAAAAAAABwIBABd3c3M6Ly9yZWxheS5leGFtcGxlLm9yZwMAOmFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhAbu1UcbdcBdUNUU_81Kcl5NULHJUItK16VdNLWrYnrnzFbcSovLvkNpsVQWV_qBmA2AZQQ_Jx9_0Z2r51PPYyfAN",
+            "carriers": [
+              "tor",
+              "i2p"
+            ]
+          }
+        ],
+        "eph": "d6bd3b313d2cbc4f0b2355179911bd45747e6bd1024b9fead9a72e914a28e827",
+        "attest": "naddr1example",
+        "bond": {
+          "pubkey": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+          "displayName": "Ada",
+          "nonce": "00112233445566778899aabbccddeeff"
+        },
+        "sig": "4bc934705dc889c5159d195c0449e824a02f425d36cd8f22efadc0774e082319c84552c3e5919a2a44bbc389b19268a47107846e4bcbc867f2cb90a905b7b46d"
+      }
+    },
+    {
+      "name": "expired",
+      "expect": {
+        "ok": false,
+        "step": 3
+      },
+      "encoded": "eyJ2IjoxLCJwIjoiM2UwYjE0Nzg1MmRkZDM1NjA3YTA2YjRiYjU2ZmZjMTAyZTRkN2IzZWNlMTYyMDQyYzNmMzJmOTZhNDljNDYxMyIsInJ6IjoiOTViMWQyM2U4ZTFjZjkxN2IzNDg2ZTliYjUzZGQxZTRlMTM1NWQ5MWIxZmUyNTM1ZTgwYTc4OWRhZDcxNGRlZCIsIm5hbWUiOiJBZGEiLCJpc3N1ZWQiOjE3OTM1Nzc1NDAsImV4cGlyZXMiOjE3OTM1Nzc1OTksInJlbGF5cyI6WyJ3c3M6Ly9yZWxheS5leGFtcGxlLm9yZyIsIndzczovL25vcy5leGFtcGxlIl0sImJveGVzIjpbeyJwIjoiM2UyN2YxMzUyODZiMTgzYmI1ZGJjNmU1OWEwY2NjNGExMDc1MDMwMmI2YWI2OGFjNzQ5NWIzYzUxOTMwMTJlYyIsImNsYWltIjoiYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMSIsImNhcmQiOiJSbE5NTVFFN1F4YlB6NnNxbDVHN3VKdkJYaUd5QlRHcUFIWWZLN1lVSDJvajFJTmxGd0FBQUFCcTU5SkVBQUFBQUdydnU0QUFBQUFBQUFBQUJ3SUJBQmQzYzNNNkx5OXlaV3hoZVM1bGVHRnRjR3hsTG05eVp3TUFPbUZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoQWJ1MVVjYmRjQmRVTlVVXzgxS2NsNU5VTEhKVUl0SzE2VmROTFdyWW5ybnpGYmNTb3ZMdmtOcHNWUVdWX3FCbUEyQVpRUV9KeDlfMFoycjUxUFBZeWZBTiIsImNhcnJpZXJzIjpbInRvciIsImkycCJdfV0sImVwaCI6ImQ2YmQzYjMxM2QyY2JjNGYwYjIzNTUxNzk5MTFiZDQ1NzQ3ZTZiZDEwMjRiOWZlYWQ5YTcyZTkxNGEyOGU4MjciLCJhdHRlc3QiOiJuYWRkcjFleGFtcGxlIiwiYm9uZCI6eyJwdWJrZXkiOiIzZTBiMTQ3ODUyZGRkMzU2MDdhMDZiNGJiNTZmZmMxMDJlNGQ3YjNlY2UxNjIwNDJjM2YzMmY5NmE0OWM0NjEzIiwiZGlzcGxheU5hbWUiOiJBZGEiLCJub25jZSI6IjAwMTEyMjMzNDQ1NTY2Nzc4ODk5YWFiYmNjZGRlZWZmIn0sInNpZyI6ImJmMjk2ODU0ZDk1YTYxODJhODBkYjk3ZDhjNzg1YzNkZDczMjRlNTkwZDM0N2ZlMDNiMDhmYzMxMzljOGZlYzUwZTJlNTIzYTU5ZmFmNTY0N2EwMzlmNDc1NDY5NjQzZGQ1MTc4YWIwZDJiYWJlZjczNDVjNmRlZTA5N2U3NTI5In0",
+      "card": {
+        "v": 1,
+        "p": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+        "rz": "95b1d23e8e1cf917b3486e9bb53dd1e4e1355d91b1fe2535e80a789dad714ded",
+        "name": "Ada",
+        "issued": 1793577540,
+        "expires": 1793577599,
+        "relays": [
+          "wss://relay.example.org",
+          "wss://nos.example"
+        ],
+        "boxes": [
+          {
+            "p": "3e27f135286b183bb5dbc6e59a0ccc4a10750302b6ab68ac7495b3c5193012ec",
+            "claim": "c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1",
+            "card": "RlNMMQE7QxbPz6sql5G7uJvBXiGyBTGqAHYfK7YUH2oj1INlFwAAAABq59JEAAAAAGrvu4AAAAAAAAAABwIBABd3c3M6Ly9yZWxheS5leGFtcGxlLm9yZwMAOmFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhAbu1UcbdcBdUNUU_81Kcl5NULHJUItK16VdNLWrYnrnzFbcSovLvkNpsVQWV_qBmA2AZQQ_Jx9_0Z2r51PPYyfAN",
+            "carriers": [
+              "tor",
+              "i2p"
+            ]
+          }
+        ],
+        "eph": "d6bd3b313d2cbc4f0b2355179911bd45747e6bd1024b9fead9a72e914a28e827",
+        "attest": "naddr1example",
+        "bond": {
+          "pubkey": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+          "displayName": "Ada",
+          "nonce": "00112233445566778899aabbccddeeff"
+        },
+        "sig": "bf296854d95a6182a80db97d8c785c3dd7324e590d347fe03b08fc3139c8fec50e2e523a59faf5647a039f475469643dd5178ab0d2babef7345c6dee097e7529"
+      }
+    },
+    {
+      "name": "too-long-lived",
+      "expect": {
+        "ok": false,
+        "step": 3
+      },
+      "encoded": "eyJ2IjoxLCJwIjoiM2UwYjE0Nzg1MmRkZDM1NjA3YTA2YjRiYjU2ZmZjMTAyZTRkN2IzZWNlMTYyMDQyYzNmMzJmOTZhNDljNDYxMyIsInJ6IjoiOTViMWQyM2U4ZTFjZjkxN2IzNDg2ZTliYjUzZGQxZTRlMTM1NWQ5MWIxZmUyNTM1ZTgwYTc4OWRhZDcxNGRlZCIsIm5hbWUiOiJBZGEiLCJpc3N1ZWQiOjE3OTM1Nzc1NDAsImV4cGlyZXMiOjE3OTYyNTYwMDAsInJlbGF5cyI6WyJ3c3M6Ly9yZWxheS5leGFtcGxlLm9yZyIsIndzczovL25vcy5leGFtcGxlIl0sImJveGVzIjpbeyJwIjoiM2UyN2YxMzUyODZiMTgzYmI1ZGJjNmU1OWEwY2NjNGExMDc1MDMwMmI2YWI2OGFjNzQ5NWIzYzUxOTMwMTJlYyIsImNsYWltIjoiYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMSIsImNhcmQiOiJSbE5NTVFFN1F4YlB6NnNxbDVHN3VKdkJYaUd5QlRHcUFIWWZLN1lVSDJvajFJTmxGd0FBQUFCcTU5SkVBQUFBQUdydnU0QUFBQUFBQUFBQUJ3SUJBQmQzYzNNNkx5OXlaV3hoZVM1bGVHRnRjR3hsTG05eVp3TUFPbUZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoQWJ1MVVjYmRjQmRVTlVVXzgxS2NsNU5VTEhKVUl0SzE2VmROTFdyWW5ybnpGYmNTb3ZMdmtOcHNWUVdWX3FCbUEyQVpRUV9KeDlfMFoycjUxUFBZeWZBTiIsImNhcnJpZXJzIjpbInRvciIsImkycCJdfV0sImVwaCI6ImQ2YmQzYjMxM2QyY2JjNGYwYjIzNTUxNzk5MTFiZDQ1NzQ3ZTZiZDEwMjRiOWZlYWQ5YTcyZTkxNGEyOGU4MjciLCJhdHRlc3QiOiJuYWRkcjFleGFtcGxlIiwiYm9uZCI6eyJwdWJrZXkiOiIzZTBiMTQ3ODUyZGRkMzU2MDdhMDZiNGJiNTZmZmMxMDJlNGQ3YjNlY2UxNjIwNDJjM2YzMmY5NmE0OWM0NjEzIiwiZGlzcGxheU5hbWUiOiJBZGEiLCJub25jZSI6IjAwMTEyMjMzNDQ1NTY2Nzc4ODk5YWFiYmNjZGRlZWZmIn0sInNpZyI6ImFmMWM1OGU1ZGZiMmZhZGU0MTA5N2JmMTNjMDczZjliZjE4NjYyNzM4ZTY2NDBmYzQyZTJhY2YxODBkYTUwZjMzM2Q1NTIzYmJkMWU0ZTc0NmYxMmQ4MmMxYTQzZTFiODE0ODAyNGFkMTNjMGE1YjVjZjg5ODYxOWM5OWE3YjJhIn0",
+      "card": {
+        "v": 1,
+        "p": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+        "rz": "95b1d23e8e1cf917b3486e9bb53dd1e4e1355d91b1fe2535e80a789dad714ded",
+        "name": "Ada",
+        "issued": 1793577540,
+        "expires": 1796256000,
+        "relays": [
+          "wss://relay.example.org",
+          "wss://nos.example"
+        ],
+        "boxes": [
+          {
+            "p": "3e27f135286b183bb5dbc6e59a0ccc4a10750302b6ab68ac7495b3c5193012ec",
+            "claim": "c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1",
+            "card": "RlNMMQE7QxbPz6sql5G7uJvBXiGyBTGqAHYfK7YUH2oj1INlFwAAAABq59JEAAAAAGrvu4AAAAAAAAAABwIBABd3c3M6Ly9yZWxheS5leGFtcGxlLm9yZwMAOmFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhAbu1UcbdcBdUNUU_81Kcl5NULHJUItK16VdNLWrYnrnzFbcSovLvkNpsVQWV_qBmA2AZQQ_Jx9_0Z2r51PPYyfAN",
+            "carriers": [
+              "tor",
+              "i2p"
+            ]
+          }
+        ],
+        "eph": "d6bd3b313d2cbc4f0b2355179911bd45747e6bd1024b9fead9a72e914a28e827",
+        "attest": "naddr1example",
+        "bond": {
+          "pubkey": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+          "displayName": "Ada",
+          "nonce": "00112233445566778899aabbccddeeff"
+        },
+        "sig": "af1c58e5dfb2fade41097bf13c073f9bf18662738e6640fc42e2acf180da50f333d5523bbd1e4e746f12d82c1a43e1b8148024ad13c0a5b5cf898619c99a7b2a"
+      }
+    },
+    {
+      "name": "tampered-name",
+      "expect": {
+        "ok": false,
+        "step": 4
+      },
+      "encoded": "eyJ2IjoxLCJwIjoiM2UwYjE0Nzg1MmRkZDM1NjA3YTA2YjRiYjU2ZmZjMTAyZTRkN2IzZWNlMTYyMDQyYzNmMzJmOTZhNDljNDYxMyIsInJ6IjoiOTViMWQyM2U4ZTFjZjkxN2IzNDg2ZTliYjUzZGQxZTRlMTM1NWQ5MWIxZmUyNTM1ZTgwYTc4OWRhZDcxNGRlZCIsIm5hbWUiOiJFdmUiLCJpc3N1ZWQiOjE3OTM1Nzc1NDAsImV4cGlyZXMiOjE3OTQ3ODcyMDAsInJlbGF5cyI6WyJ3c3M6Ly9yZWxheS5leGFtcGxlLm9yZyIsIndzczovL25vcy5leGFtcGxlIl0sImJveGVzIjpbeyJwIjoiM2UyN2YxMzUyODZiMTgzYmI1ZGJjNmU1OWEwY2NjNGExMDc1MDMwMmI2YWI2OGFjNzQ5NWIzYzUxOTMwMTJlYyIsImNsYWltIjoiYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMSIsImNhcmQiOiJSbE5NTVFFN1F4YlB6NnNxbDVHN3VKdkJYaUd5QlRHcUFIWWZLN1lVSDJvajFJTmxGd0FBQUFCcTU5SkVBQUFBQUdydnU0QUFBQUFBQUFBQUJ3SUJBQmQzYzNNNkx5OXlaV3hoZVM1bGVHRnRjR3hsTG05eVp3TUFPbUZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoQWJ1MVVjYmRjQmRVTlVVXzgxS2NsNU5VTEhKVUl0SzE2VmROTFdyWW5ybnpGYmNTb3ZMdmtOcHNWUVdWX3FCbUEyQVpRUV9KeDlfMFoycjUxUFBZeWZBTiIsImNhcnJpZXJzIjpbInRvciIsImkycCJdfV0sImVwaCI6ImQ2YmQzYjMxM2QyY2JjNGYwYjIzNTUxNzk5MTFiZDQ1NzQ3ZTZiZDEwMjRiOWZlYWQ5YTcyZTkxNGEyOGU4MjciLCJhdHRlc3QiOiJuYWRkcjFleGFtcGxlIiwiYm9uZCI6eyJwdWJrZXkiOiIzZTBiMTQ3ODUyZGRkMzU2MDdhMDZiNGJiNTZmZmMxMDJlNGQ3YjNlY2UxNjIwNDJjM2YzMmY5NmE0OWM0NjEzIiwiZGlzcGxheU5hbWUiOiJBZGEiLCJub25jZSI6IjAwMTEyMjMzNDQ1NTY2Nzc4ODk5YWFiYmNjZGRlZWZmIn0sInNpZyI6IjRiYzkzNDcwNWRjODg5YzUxNTlkMTk1YzA0NDllODI0YTAyZjQyNWQzNmNkOGYyMmVmYWRjMDc3NGUwODIzMTljODQ1NTJjM2U1OTE5YTJhNDRiYmMzODliMTkyNjhhNDcxMDc4NDZlNGJjYmM4NjdmMmNiOTBhOTA1YjdiNDZkIn0",
+      "card": {
+        "v": 1,
+        "p": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+        "rz": "95b1d23e8e1cf917b3486e9bb53dd1e4e1355d91b1fe2535e80a789dad714ded",
+        "name": "Eve",
+        "issued": 1793577540,
+        "expires": 1794787200,
+        "relays": [
+          "wss://relay.example.org",
+          "wss://nos.example"
+        ],
+        "boxes": [
+          {
+            "p": "3e27f135286b183bb5dbc6e59a0ccc4a10750302b6ab68ac7495b3c5193012ec",
+            "claim": "c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1",
+            "card": "RlNMMQE7QxbPz6sql5G7uJvBXiGyBTGqAHYfK7YUH2oj1INlFwAAAABq59JEAAAAAGrvu4AAAAAAAAAABwIBABd3c3M6Ly9yZWxheS5leGFtcGxlLm9yZwMAOmFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhAbu1UcbdcBdUNUU_81Kcl5NULHJUItK16VdNLWrYnrnzFbcSovLvkNpsVQWV_qBmA2AZQQ_Jx9_0Z2r51PPYyfAN",
+            "carriers": [
+              "tor",
+              "i2p"
+            ]
+          }
+        ],
+        "eph": "d6bd3b313d2cbc4f0b2355179911bd45747e6bd1024b9fead9a72e914a28e827",
+        "attest": "naddr1example",
+        "bond": {
+          "pubkey": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+          "displayName": "Ada",
+          "nonce": "00112233445566778899aabbccddeeff"
+        },
+        "sig": "4bc934705dc889c5159d195c0449e824a02f425d36cd8f22efadc0774e082319c84552c3e5919a2a44bbc389b19268a47107846e4bcbc867f2cb90a905b7b46d"
+      }
+    },
+    {
+      "name": "tampered-box",
+      "expect": {
+        "ok": false,
+        "step": 4
+      },
+      "encoded": "eyJ2IjoxLCJwIjoiM2UwYjE0Nzg1MmRkZDM1NjA3YTA2YjRiYjU2ZmZjMTAyZTRkN2IzZWNlMTYyMDQyYzNmMzJmOTZhNDljNDYxMyIsInJ6IjoiOTViMWQyM2U4ZTFjZjkxN2IzNDg2ZTliYjUzZGQxZTRlMTM1NWQ5MWIxZmUyNTM1ZTgwYTc4OWRhZDcxNGRlZCIsIm5hbWUiOiJBZGEiLCJpc3N1ZWQiOjE3OTM1Nzc1NDAsImV4cGlyZXMiOjE3OTQ3ODcyMDAsInJlbGF5cyI6WyJ3c3M6Ly9yZWxheS5leGFtcGxlLm9yZyIsIndzczovL25vcy5leGFtcGxlIl0sImJveGVzIjpbeyJwIjoiM2UyN2YxMzUyODZiMTgzYmI1ZGJjNmU1OWEwY2NjNGExMDc1MDMwMmI2YWI2OGFjNzQ5NWIzYzUxOTMwMTJlYyIsImNsYWltIjoiZDJkMmQyZDJkMmQyZDJkMmQyZDJkMmQyZDJkMmQyZDJkMmQyZDJkMmQyZDJkMmQyZDJkMmQyZDJkMmQyZDJkMiIsImNhcmQiOiJSbE5NTVFFN1F4YlB6NnNxbDVHN3VKdkJYaUd5QlRHcUFIWWZLN1lVSDJvajFJTmxGd0FBQUFCcTU5SkVBQUFBQUdydnU0QUFBQUFBQUFBQUJ3SUJBQmQzYzNNNkx5OXlaV3hoZVM1bGVHRnRjR3hsTG05eVp3TUFPbUZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoWVdGaFlXRmhZV0ZoQWJ1MVVjYmRjQmRVTlVVXzgxS2NsNU5VTEhKVUl0SzE2VmROTFdyWW5ybnpGYmNTb3ZMdmtOcHNWUVdWX3FCbUEyQVpRUV9KeDlfMFoycjUxUFBZeWZBTiIsImNhcnJpZXJzIjpbInRvciIsImkycCJdfV0sImVwaCI6ImQ2YmQzYjMxM2QyY2JjNGYwYjIzNTUxNzk5MTFiZDQ1NzQ3ZTZiZDEwMjRiOWZlYWQ5YTcyZTkxNGEyOGU4MjciLCJhdHRlc3QiOiJuYWRkcjFleGFtcGxlIiwiYm9uZCI6eyJwdWJrZXkiOiIzZTBiMTQ3ODUyZGRkMzU2MDdhMDZiNGJiNTZmZmMxMDJlNGQ3YjNlY2UxNjIwNDJjM2YzMmY5NmE0OWM0NjEzIiwiZGlzcGxheU5hbWUiOiJBZGEiLCJub25jZSI6IjAwMTEyMjMzNDQ1NTY2Nzc4ODk5YWFiYmNjZGRlZWZmIn0sInNpZyI6IjRiYzkzNDcwNWRjODg5YzUxNTlkMTk1YzA0NDllODI0YTAyZjQyNWQzNmNkOGYyMmVmYWRjMDc3NGUwODIzMTljODQ1NTJjM2U1OTE5YTJhNDRiYmMzODliMTkyNjhhNDcxMDc4NDZlNGJjYmM4NjdmMmNiOTBhOTA1YjdiNDZkIn0",
+      "card": {
+        "v": 1,
+        "p": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+        "rz": "95b1d23e8e1cf917b3486e9bb53dd1e4e1355d91b1fe2535e80a789dad714ded",
+        "name": "Ada",
+        "issued": 1793577540,
+        "expires": 1794787200,
+        "relays": [
+          "wss://relay.example.org",
+          "wss://nos.example"
+        ],
+        "boxes": [
+          {
+            "p": "3e27f135286b183bb5dbc6e59a0ccc4a10750302b6ab68ac7495b3c5193012ec",
+            "claim": "d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2",
+            "card": "RlNMMQE7QxbPz6sql5G7uJvBXiGyBTGqAHYfK7YUH2oj1INlFwAAAABq59JEAAAAAGrvu4AAAAAAAAAABwIBABd3c3M6Ly9yZWxheS5leGFtcGxlLm9yZwMAOmFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhAbu1UcbdcBdUNUU_81Kcl5NULHJUItK16VdNLWrYnrnzFbcSovLvkNpsVQWV_qBmA2AZQQ_Jx9_0Z2r51PPYyfAN",
+            "carriers": [
+              "tor",
+              "i2p"
+            ]
+          }
+        ],
+        "eph": "d6bd3b313d2cbc4f0b2355179911bd45747e6bd1024b9fead9a72e914a28e827",
+        "attest": "naddr1example",
+        "bond": {
+          "pubkey": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+          "displayName": "Ada",
+          "nonce": "00112233445566778899aabbccddeeff"
+        },
+        "sig": "4bc934705dc889c5159d195c0449e824a02f425d36cd8f22efadc0774e082319c84552c3e5919a2a44bbc389b19268a47107846e4bcbc867f2cb90a905b7b46d"
+      }
+    },
+    {
+      "name": "expired-link-card",
+      "expect": {
+        "ok": false,
+        "step": 5
+      },
+      "encoded": "eyJ2IjoxLCJwIjoiM2UwYjE0Nzg1MmRkZDM1NjA3YTA2YjRiYjU2ZmZjMTAyZTRkN2IzZWNlMTYyMDQyYzNmMzJmOTZhNDljNDYxMyIsInJ6IjoiOTViMWQyM2U4ZTFjZjkxN2IzNDg2ZTliYjUzZGQxZTRlMTM1NWQ5MWIxZmUyNTM1ZTgwYTc4OWRhZDcxNGRlZCIsIm5hbWUiOiJBZGEiLCJpc3N1ZWQiOjE3OTM1Nzc1NDAsImV4cGlyZXMiOjE3OTQ3ODcyMDAsInJlbGF5cyI6WyJ3c3M6Ly9yZWxheS5leGFtcGxlLm9yZyIsIndzczovL25vcy5leGFtcGxlIl0sImJveGVzIjpbeyJwIjoiM2UyN2YxMzUyODZiMTgzYmI1ZGJjNmU1OWEwY2NjNGExMDc1MDMwMmI2YWI2OGFjNzQ5NWIzYzUxOTMwMTJlYyIsImNsYWltIjoiYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMWMxYzFjMSIsImNhcmQiOiJSbE5NTVFFN1F4YlB6NnNxbDVHN3VKdkJYaUd5QlRHcUFIWWZLN1lVSDJvajFJTmxGd0FBQUFCcTNVYUFBQUFBQUdybjBrUUFBQUFBQUFBQUNBRUJBQmQzYzNNNkx5OXlaV3hoZVM1bGVHRnRjR3hsTG05eVotR1gtel82SElyT3pSTmFfc21HYkdmQnVQVUNiTlFlSU1nR1B1MlVKRVlXMGxITWYxdm5fY1pQaXNuQXY2T0Y5RW5ia1NSYXZ5dXJSY0dWaUhnTndndyIsImNhcnJpZXJzIjpbInRvciIsImkycCJdfV0sImVwaCI6ImQ2YmQzYjMxM2QyY2JjNGYwYjIzNTUxNzk5MTFiZDQ1NzQ3ZTZiZDEwMjRiOWZlYWQ5YTcyZTkxNGEyOGU4MjciLCJhdHRlc3QiOiJuYWRkcjFleGFtcGxlIiwiYm9uZCI6eyJwdWJrZXkiOiIzZTBiMTQ3ODUyZGRkMzU2MDdhMDZiNGJiNTZmZmMxMDJlNGQ3YjNlY2UxNjIwNDJjM2YzMmY5NmE0OWM0NjEzIiwiZGlzcGxheU5hbWUiOiJBZGEiLCJub25jZSI6IjAwMTEyMjMzNDQ1NTY2Nzc4ODk5YWFiYmNjZGRlZWZmIn0sInNpZyI6Ijg5MmYyZmU1MTU3YjVmZDU4OTFkODVjYzYxZjlkYjcxNzRkMjQ4NzI2ZDc4NzVjYjQ4OGQ4NGE3MGIwZmJjMWRlMDhkYTYyNGY0MjAyMzU4ZjFhYjBiZGIxOGI2NjdiNGJlZTNmN2Q4MWI0MzUxNzRiNDMxOTc2NmEyYWVlY2U4In0",
+      "card": {
+        "v": 1,
+        "p": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+        "rz": "95b1d23e8e1cf917b3486e9bb53dd1e4e1355d91b1fe2535e80a789dad714ded",
+        "name": "Ada",
+        "issued": 1793577540,
+        "expires": 1794787200,
+        "relays": [
+          "wss://relay.example.org",
+          "wss://nos.example"
+        ],
+        "boxes": [
+          {
+            "p": "3e27f135286b183bb5dbc6e59a0ccc4a10750302b6ab68ac7495b3c5193012ec",
+            "claim": "c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1c1",
+            "card": "RlNMMQE7QxbPz6sql5G7uJvBXiGyBTGqAHYfK7YUH2oj1INlFwAAAABq3UaAAAAAAGrn0kQAAAAAAAAACAEBABd3c3M6Ly9yZWxheS5leGFtcGxlLm9yZ-GX-z_6HIrOzRNa_smGbGfBuPUCbNQeIMgGPu2UJEYW0lHMf1vn_cZPisnAv6OF9EnbkSRavyurRcGViHgNwgw",
+            "carriers": [
+              "tor",
+              "i2p"
+            ]
+          }
+        ],
+        "eph": "d6bd3b313d2cbc4f0b2355179911bd45747e6bd1024b9fead9a72e914a28e827",
+        "attest": "naddr1example",
+        "bond": {
+          "pubkey": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+          "displayName": "Ada",
+          "nonce": "00112233445566778899aabbccddeeff"
+        },
+        "sig": "892f2fe5157b5fd5891d85cc61f9db7174d248726d7875cb488d84a70b0fbc1de08da624f4202358f1ab0bdb18b667b4bee3f7d81b435174b4319766a2aeece8"
+      }
+    },
+    {
+      "name": "no-boxes-no-bond",
+      "expect": {
+        "ok": true
+      },
+      "encoded": "eyJ2IjoxLCJwIjoiM2UwYjE0Nzg1MmRkZDM1NjA3YTA2YjRiYjU2ZmZjMTAyZTRkN2IzZWNlMTYyMDQyYzNmMzJmOTZhNDljNDYxMyIsInJ6IjoiOTViMWQyM2U4ZTFjZjkxN2IzNDg2ZTliYjUzZGQxZTRlMTM1NWQ5MWIxZmUyNTM1ZTgwYTc4OWRhZDcxNGRlZCIsIm5hbWUiOiJBZGEiLCJpc3N1ZWQiOjE3OTM1Nzc1NDAsImV4cGlyZXMiOjE3OTQ3ODcyMDAsInJlbGF5cyI6WyJ3c3M6Ly9yZWxheS5leGFtcGxlLm9yZyIsIndzczovL25vcy5leGFtcGxlIl0sImJveGVzIjpbXSwiZXBoIjoiZDZiZDNiMzEzZDJjYmM0ZjBiMjM1NTE3OTkxMWJkNDU3NDdlNmJkMTAyNGI5ZmVhZDlhNzJlOTE0YTI4ZTgyNyIsInNpZyI6ImQyMzVmYzE4ZjA3YWQ2YjQ2Y2MyZjZiMzA1MjY5YjBkYmMyNzdhZWFmZjFkZmI4NjQ2MzFjMTExZTRiN2E4ZTk0NTYzNTdlMjE0YzM0NmI2NGY5ZDUxZDM5MDJiZDM5OGYxZTZiNDFhYTU3NzUzYTMzODA0ODM4OTczY2M0ZjYwIn0",
+      "card": {
+        "v": 1,
+        "p": "3e0b147852ddd35607a06b4bb56ffc102e4d7b3ece162042c3f32f96a49c4613",
+        "rz": "95b1d23e8e1cf917b3486e9bb53dd1e4e1355d91b1fe2535e80a789dad714ded",
+        "name": "Ada",
+        "issued": 1793577540,
+        "expires": 1794787200,
+        "relays": [
+          "wss://relay.example.org",
+          "wss://nos.example"
+        ],
+        "boxes": [],
+        "eph": "d6bd3b313d2cbc4f0b2355179911bd45747e6bd1024b9fead9a72e914a28e827",
+        "sig": "d235fc18f07ad6b46cc2f6b305269b0dbc277aeaff1dfb864631c111e4b7a8e9456357e214c346b64f9d51d3902bd398f1e6b41aa57753a33804838973cc4f60"
+      }
+    }
+  ],
+  "refresh": {
+    "pinnedNodeId": "3b4316cfcfab2a9791bbb89bc15e21b20531aa00761f2bb6141f6a23d4836517",
+    "later": 1795305600,
+    "cases": [
+      {
+        "name": "fresh-card-same-node",
+        "card": "RlNMMQE7QxbPz6sql5G7uJvBXiGyBTGqAHYfK7YUH2oj1INlFwAAAABrAjBEAAAAAGsKGYAAAAAAAAAACQEBABd3c3M6Ly9yZWxheS5leGFtcGxlLm9yZxVcqlwx4xd2X9Xx3ZAT0uArQvPdhySJcVf9dgdBpG98V-80Zx2UVa5AU_NqyOizaBZx9jFaO_5pZ6Mi1iLFeAY",
+        "expect": {
+          "ok": true
+        }
+      },
+      {
+        "name": "fresh-card-other-node",
+        "card": "RlNMMQHQSrIydCu0qzoTaL1GFeTm0CJKtxoBa6-FIKMyyXeHNwAAAABrAjBEAAAAAGsKGYAAAAAAAAAAAQEBABd3c3M6Ly9yZWxheS5leGFtcGxlLm9yZ-Oikq0qXPwNam5ggBSb_zr6SOtQU_wnhTc3xeFiGQUrOuXgCLdXmcHiIBng12XvK--Vbr2tQsJNEvznuQGjcAI",
+        "expect": {
+          "ok": false
+        }
+      },
+      {
+        "name": "stale-card",
+        "card": "RlNMMQE7QxbPz6sql5G7uJvBXiGyBTGqAHYfK7YUH2oj1INlFwAAAABq3UaAAAAAAGrn0kQAAAAAAAAACAEBABd3c3M6Ly9yZWxheS5leGFtcGxlLm9yZ-GX-z_6HIrOzRNa_smGbGfBuPUCbNQeIMgGPu2UJEYW0lHMf1vn_cZPisnAv6OF9EnbkSRavyurRcGViHgNwgw",
+        "expect": {
+          "ok": false
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "nostr-contact-card",
+  "version": "0.1.0",
+  "description": "One QR or link that makes a stranger a contact, names their box, and starts a bond. Build, sign, read and refresh contact cards; verify the Link address card inside.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "files": ["dist", "vectors/contact-card.json", "LICENCE"],
+  "scripts": { "build": "tsc -p tsconfig.build.json", "test": "vitest run", "typecheck": "tsc --noEmit", "prepublishOnly": "npm run build" },
+  "keywords": ["nostr", "contact", "card", "qr", "rendezvous", "bond", "ed25519", "bip-340"],
+  "author": "ForgeSworn",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/forgesworn/nostr-contact-card" },
+  "engines": { "node": ">=22" },
+  "publishConfig": { "provenance": true },
+  "dependencies": { "@noble/curves": "^2.0.1", "@noble/hashes": "^2.0.1" },
+  "devDependencies": { "typescript": "^5.7.0", "vitest": "^5.0.0" }
+}
