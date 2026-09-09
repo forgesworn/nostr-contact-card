@@ -13,11 +13,12 @@ describe('known-answer vectors from the draft', () => {
       const r = readCard(c.encoded, v.now)
       expect(r.ok).toBe(c.expect.ok)
       if (!r.ok) expect(r.step).toBe(c.expect.step)
+      else if (c.expect.stripped) for (const k of c.expect.stripped) expect(k in r.card).toBe(false)
     })
   }
   for (const c of v.refresh.cases) {
     it(`refresh ${c.name}`, () => {
-      expect(refreshBox(v.refresh.pinnedNodeId, new Uint8Array(Buffer.from(c.card, 'base64url')), v.refresh.later).ok).toBe(c.expect.ok)
+      expect(refreshBox(c.pinnedNodeId ?? v.refresh.pinnedNodeId, new Uint8Array(Buffer.from(c.card, 'base64url')), v.refresh.later).ok).toBe(c.expect.ok)
     })
   }
 })
