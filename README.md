@@ -7,8 +7,12 @@
 
 **One QR or link that makes a stranger a contact, names their box, and starts a bond.**
 
-A contact card is a small signed JSON object carried after `#` in a link or
-as the whole of a QR code. It holds a person's key and name, their public
+A contact card is a signed Nostr event of the reserved kind 30641, never
+posted to a relay, carried after `#` in a link or as the whole of a QR
+code. The event's pubkey is the person's key, its created_at is when the
+card was issued, its expiration tag is when it lapses, and its content is
+the card, so the signature is the one every signer already makes: an
+extension, a bunker or a key held locally all make the same card. It holds a person's key and name, their public
 relays, their box (a Link address card, carried opaquely, that the person's
 signature endorses), a rendezvous key and a fresh ephemeral for deriving
 private rendezvous material, an optional attestation pointer, and a bond
@@ -24,9 +28,11 @@ pins from the first read (the Link card inside a contact card lasts seven
 days, the card itself thirty, so a client keeps the node id it read).
 
 ```ts
-import { buildCard, cardLink, readCard, refreshBox } from 'nostr-contact-card'
+import { buildCard, buildCardWith, cardLink, readCard, refreshBox } from 'nostr-contact-card'
 
 const card = buildCard({ identityPrivateKey, rz, ephemeralPrivateKey, name: 'Ada', relays, boxes: [box], bond })
+// or, through a signer that holds the key (NIP-07, NIP-46):
+const viaSigner = await buildCardWith(pubkey, (unsigned) => signer.signEvent(unsigned), { rz, ephemeralPrivateKey, name: 'Ada', relays, boxes: [box] })
 const link = cardLink('https://your.app/join', card)     // the server never sees the fragment
 
 const r = readCard(scannedText, now())
@@ -37,11 +43,13 @@ const fresh = refreshBox(pinnedNodeId, freshLinkCardBytes, now(), highestSerialS
 ```
 
 Vectors in `vectors/contact-card.json` are the draft's known-answer file:
-cards failing at each step, extra-key, format-character, surrogate,
-byte-order-mark, empty-field and expiry-window cases, and refresh cases
-including a small-order node id and a nonce point carrying torsion. A
-second implementation, written from the draft alone, must agree on every
-one; the vectors carry the expected `ok` and step, and a verifier that
+thirty-two cards failing at each step, wrong kind and version, extra tag,
+extra keys on the event and inside the signed content, tampered fields
+and times, a foreign key, format characters, surrogates, byte-order
+marks, empty fields and expiry windows, and six refresh cases including a
+small-order node id and a nonce point carrying torsion. A second
+implementation, written from the draft alone, must agree on every one;
+the vectors carry the expected `ok` and step, and a verifier that
 disagrees on either is wrong.
 
 ## What a card carries
@@ -88,10 +96,17 @@ ceremony.
   views. A serial above 2^53 is refused under rule 3, before the signature.
 - `now` must be a finite number of seconds and `highestSerial` an integer
   or absent. Anything else fails closed; it never switches a check off.
-- Hex case is normalised and base64url padding tolerated, so one card has
-  several wire forms; so does any JSON re-serialisation. Anything that
-  caches or deduplicates on the encoded string must key on the card's
-  fields, not its bytes.
+- The signature is the event's, over its NIP-01 id, and the content is
+  signed byte for byte as carried. A key the draft does not name never
+  reaches the caller, whether it sits on the event outside the signature
+  or inside the signed content. The event carries exactly a `d` tag of
+  `card` and an `expiration` tag; a third tag is refused before the
+  signature is looked at. `buildCardWith` refuses a signer that returns
+  anything but the event it was asked to sign.
+- Hex case in the id and signature is normalised and base64url padding
+  tolerated, so one card has several wire forms. Anything that caches or
+  deduplicates on the encoded string must key on the card's fields, not
+  its bytes.
 - The size cap applies to the card, not the link it rides on. A contact
   card's `issued` may be up to 300 seconds ahead of `now`, and `expires`
   must be after `issued`.

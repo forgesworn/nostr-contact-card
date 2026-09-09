@@ -4,7 +4,8 @@ import { sha256 } from '@noble/hashes/sha2.js'
 import { bytesToHex, hexToBytes, utf8ToBytes } from '@noble/hashes/utils.js'
 import { verifyLinkCard, isRelayUrl, type LinkCard } from './link-card.js'
 
-export const CARD_DOMAIN = 'nostr-contact-card:v1'
+/** The reserved addressable kind a card rides in. Never published to a relay. */
+export const CARD_KIND = 30641
 export const MAX_CARD_BYTES = 16 * 1024
 export const MAX_AGE_SECONDS = 30 * 24 * 3600
 export const MAX_RELAYS = 8
@@ -44,7 +45,59 @@ export interface UnsignedCard {
   attest?: string
   bond?: BondHandshake
 }
-export interface Card extends UnsignedCard { sig: string }
+
+/**
+ * The card as it travels: a signed Nostr event of `CARD_KIND` whose
+ * `pubkey` is `p`, `created_at` is `issued`, `expiration` tag is `expires`
+ * and `content` is the card. The signature is the one every signer makes.
+ */
+export interface CardEvent {
+  kind: number
+  pubkey: string
+  created_at: number
+  tags: string[][]
+  content: string
+  id: string
+  sig: string
+}
+
+/** The card as read: the named fields, the event's id and signature, and the event itself, for carrying on. */
+export interface Card extends UnsignedCard {
+  id: string
+  sig: string
+  event: CardEvent
+}
+
+/** What a signer signs: the event without its id and signature. */
+export interface UnsignedCardEvent {
+  kind: number
+  pubkey: string
+  created_at: number
+  tags: string[][]
+  content: string
+}
+
+/** The NIP-01 id: sha256 over the serialised array of the six fields. */
+export function eventId(ev: UnsignedCardEvent): string {
+  return sha256hex(utf8ToBytes(JSON.stringify([0, ev.pubkey, ev.created_at, ev.kind, ev.tags, ev.content])))
+}
+
+/** §1: the content of a card event, from the fields the draft names, in a fixed order. */
+export function cardContent(c: Omit<UnsignedCard, 'p' | 'issued' | 'expires'>): string {
+  const o: Record<string, unknown> = { v: 1, rz: c.rz }
+  if (c.name !== undefined) o.name = c.name
+  o.relays = c.relays
+  o.boxes = c.boxes
+  o.eph = c.eph
+  if (c.attest !== undefined) o.attest = c.attest
+  if (c.bond !== undefined) o.bond = c.bond
+  return JSON.stringify(o)
+}
+
+/** The unsigned event for a card, ready for a signer. */
+export function cardEvent(c: UnsignedCard): UnsignedCardEvent {
+  return { kind: CARD_KIND, pubkey: c.p, created_at: c.issued, tags: [['d', 'card'], ['expiration', String(c.expires)]], content: cardContent(c) }
+}
 
 const HEX64 = /^[0-9a-f]{64}$/, HEX128 = /^[0-9a-f]{128}$/, HEX32 = /^[0-9a-f]{32}$/
 const B64URL = /^[A-Za-z0-9_-]+$/
@@ -134,23 +187,8 @@ export function handshakeBytes(p: BondHandshake): Uint8Array {
   return utf8ToBytes(JSON.stringify(o))
 }
 
-/**
- * §2 of the draft: the digest the card's signature covers. Fields are
- * colon-joined; every field that could carry a separator is constrained by
- * `readCard` step 2 (relays no comma, box cards base64url, carriers a
- * short token alphabet and never an empty list, attest no colon, and no
- * empty name or attest, which would hash the same as absence) so no two
- * well-formed cards share a digest.
- */
-export function cardDigest(c: UnsignedCard): Uint8Array {
-  const box = (b: Box) => `${b.p}/${b.claim}/${b.card}/${(b.carriers ?? []).join('+')}`
-  const s = [CARD_DOMAIN, c.p, c.rz, String(c.issued), String(c.expires), c.eph,
-    c.relays.join(','), c.boxes.map(box).join(','), c.attest ?? '',
-    c.bond ? sha256hex(handshakeBytes(c.bond)) : '', sha256hex(utf8ToBytes(c.name ?? ''))].join(':')
-  return sha256(utf8ToBytes(s))
-}
-
 export interface BuildOptions {
+  /** The identity's secret key, for a client that holds one. Otherwise use `buildCardWith` and a signer. */
   identityPrivateKey: Uint8Array
   /** The rendezvous public key, a child of the root, x-only hex. */
   rz: string
@@ -166,14 +204,16 @@ export interface BuildOptions {
   now?: () => number
 }
 
-/** Build and sign a card. Throws when it would not fit or would not verify. */
-export function buildCard(o: BuildOptions): Card {
+/** A signer as NIP-07 and NIP-46 expose one: given the unsigned event, returns it signed. */
+export type SignEvent = (unsigned: UnsignedCardEvent) => Promise<CardEvent> | CardEvent
+
+function unsignedFor(p: string, o: Omit<BuildOptions, 'identityPrivateKey'>): { unsigned: UnsignedCard; now: number } {
   const now = (o.now ?? (() => Math.floor(Date.now() / 1000)))()
   const ttl = o.ttlSeconds ?? MAX_AGE_SECONDS
   if (ttl <= 0 || ttl > MAX_AGE_SECONDS) throw new Error('ttl must be within 30 days')
   const unsigned: UnsignedCard = {
     v: 1,
-    p: bytesToHex(schnorr.getPublicKey(o.identityPrivateKey)),
+    p,
     rz: o.rz,
     ...(o.name !== undefined ? { name: o.name } : {}),
     issued: now,
@@ -184,20 +224,53 @@ export function buildCard(o: BuildOptions): Card {
     ...(o.attest !== undefined ? { attest: o.attest } : {}),
     ...(o.bond !== undefined ? { bond: cleanBond({ v: 1, ...o.bond }) } : {}),
   }
-  const card: Card = { ...unsigned, sig: bytesToHex(schnorr.sign(cardDigest(unsigned), o.identityPrivateKey)) }
-  const encoded = encodeCard(card)
+  return { unsigned, now }
+}
+
+function finish(event: CardEvent, now: number): Card {
+  const encoded = encodeCard(event)
   if (encoded.length > MAX_CARD_BYTES) throw new Error('card exceeds 16 KiB; drop a box')
   const r = readCard(encoded, now)
   if (!r.ok) throw new Error(`built a card that does not read: step ${r.step} ${r.reason}`)
-  return card
+  return r.card
 }
 
-export function encodeCard(card: Card): string {
-  return b64url.encode(utf8ToBytes(JSON.stringify(card)))
+/** Build and sign a card with a secret key held here. Throws when it would not fit or would not verify. */
+export function buildCard(o: BuildOptions): Card {
+  const p = bytesToHex(schnorr.getPublicKey(o.identityPrivateKey))
+  const { unsigned, now } = unsignedFor(p, o)
+  const ev = cardEvent(unsigned)
+  const id = eventId(ev)
+  const event: CardEvent = { ...ev, id, sig: bytesToHex(schnorr.sign(hexToBytes(id), o.identityPrivateKey)) }
+  return finish(event, now)
+}
+
+/**
+ * Build a card through a signer that holds the key: a NIP-07 extension, a
+ * NIP-46 bunker, anything that signs an event. `p` is the signer's pubkey.
+ * The signed event is checked to be the one asked for before it is read.
+ */
+export async function buildCardWith(p: string, signEvent: SignEvent, o: Omit<BuildOptions, 'identityPrivateKey'>): Promise<Card> {
+  const pub = String(p).toLowerCase()
+  if (!HEX64.test(pub)) throw new Error('p must be a 32-byte x-only public key as hex')
+  const { unsigned, now } = unsignedFor(pub, o)
+  const ev = cardEvent(unsigned)
+  const signed = await signEvent(ev)
+  if (!signed || typeof signed !== 'object') throw new Error('signer returned nothing')
+  for (const k of ['kind', 'pubkey', 'created_at', 'tags', 'content'] as const) {
+    if (JSON.stringify((signed as unknown as Record<string, unknown>)[k]) !== JSON.stringify(ev[k])) throw new Error(`signer changed the event's ${k}`)
+  }
+  return finish({ kind: signed.kind, pubkey: signed.pubkey, created_at: signed.created_at, tags: signed.tags, content: signed.content, id: signed.id, sig: signed.sig }, now)
+}
+
+/** The bytes a card travels as: the event's JSON, base64url without padding. */
+export function encodeCard(card: Card | CardEvent): string {
+  const event = 'event' in card ? card.event : card
+  return b64url.encode(utf8ToBytes(JSON.stringify({ kind: event.kind, pubkey: event.pubkey, created_at: event.created_at, tags: event.tags, content: event.content, id: event.id, sig: event.sig })))
 }
 
 /** A link a person can send: the card rides after `#`, so no server sees it. */
-export function cardLink(base: string, card: Card): string {
+export function cardLink(base: string, card: Card | CardEvent): string {
   return `${base.replace(/#.*$/, '')}#${encodeCard(card)}`
 }
 
@@ -221,57 +294,81 @@ export function readCard(encoded: string, now: number): ReadResult {
   const body = encoded.slice(encoded.lastIndexOf('#') + 1)
   if (body.length === 0 || body.length > MAX_CARD_BYTES) return { ok: false, step: 1, reason: 'size' }
   if (!Number.isFinite(now)) return { ok: false, step: 3, reason: 'clock' }
-  let c: any
+  let ev: any
   // Strict UTF-8: a byte sequence that is not UTF-8 is not a card, not a card with U+FFFD in it.
-  try { c = JSON.parse(utf8Strict.decode(b64url.decode(body))) } catch { return { ok: false, step: 1, reason: 'decode' } }
+  try { ev = JSON.parse(utf8Strict.decode(b64url.decode(body))) } catch { return { ok: false, step: 1, reason: 'decode' } }
+  if (!ev || typeof ev !== 'object' || Array.isArray(ev) || ev.kind !== CARD_KIND || typeof ev.content !== 'string') return { ok: false, step: 1, reason: 'version' }
+  let c: any
+  try { c = JSON.parse(ev.content) } catch { return { ok: false, step: 1, reason: 'decode' } }
   if (!c || typeof c !== 'object' || Array.isArray(c) || c.v !== 1) return { ok: false, step: 1, reason: 'version' }
-  const hex: Record<'p' | 'rz' | 'eph', string> = { p: '', rz: '', eph: '' }
-  for (const f of ['p', 'rz', 'eph'] as const) {
+  // Step 2: the event's own shape, then the card's fields.
+  if (typeof ev.pubkey !== 'string') return { ok: false, step: 2, reason: 'p' }
+  const p = ev.pubkey.toLowerCase()
+  if (!HEX64.test(p)) return { ok: false, step: 2, reason: 'p' }
+  if (typeof ev.id !== 'string') return { ok: false, step: 2, reason: 'id' }
+  const id = ev.id.toLowerCase()
+  if (!HEX64.test(id)) return { ok: false, step: 2, reason: 'id' }
+  if (typeof ev.sig !== 'string') return { ok: false, step: 2, reason: 'sig' }
+  const sig = ev.sig.toLowerCase()
+  if (!HEX128.test(sig)) return { ok: false, step: 2, reason: 'sig' }
+  // Exactly a `d` of `card` and one `expiration`, nothing else: a tag is inside the signature, and a third could carry what a card may not.
+  if (!Array.isArray(ev.tags) || ev.tags.length !== 2 || !ev.tags.every((t: unknown) => Array.isArray(t) && t.length === 2 && t.every((x) => typeof x === 'string'))) return { ok: false, step: 2, reason: 'tags' }
+  const tags = ev.tags as string[][]
+  const dTag = tags.find((t) => t[0] === 'd'), expTag = tags.find((t) => t[0] === 'expiration')
+  if (!dTag || !expTag || dTag[1] !== 'card') return { ok: false, step: 2, reason: 'tags' }
+  const hex: Record<'rz' | 'eph', string> = { rz: '', eph: '' }
+  for (const f of ['rz', 'eph'] as const) {
     if (typeof c[f] !== 'string') return { ok: false, step: 2, reason: f }
     hex[f] = c[f].toLowerCase()
     if (!HEX64.test(hex[f])) return { ok: false, step: 2, reason: f }
   }
-  if (typeof c.sig !== 'string') return { ok: false, step: 2, reason: 'sig' }
-  const sig = c.sig.toLowerCase()
-  if (!HEX128.test(sig)) return { ok: false, step: 2, reason: 'sig' }
   if (c.name !== undefined && !goodText(c.name)) return { ok: false, step: 2, reason: 'name' }
   if (!Array.isArray(c.relays) || c.relays.length > MAX_RELAYS || c.relays.some((r: unknown) => !isRelayUrl(r as string))) return { ok: false, step: 2, reason: 'relays' }
   if (!Array.isArray(c.boxes) || c.boxes.length > MAX_BOXES) return { ok: false, step: 2, reason: 'boxes' }
   const boxesClean: Box[] = []
   for (const b of c.boxes) {
     if (!b || typeof b !== 'object' || Array.isArray(b)) return { ok: false, step: 2, reason: 'box' }
-    const p = typeof b.p === 'string' ? b.p.toLowerCase() : ''
+    const bp = typeof b.p === 'string' ? b.p.toLowerCase() : ''
     const claim = typeof b.claim === 'string' ? b.claim.toLowerCase() : ''
-    if (!HEX64.test(p)) return { ok: false, step: 2, reason: 'box p' }
+    if (!HEX64.test(bp)) return { ok: false, step: 2, reason: 'box p' }
     if (!HEX64.test(claim)) return { ok: false, step: 2, reason: 'box claim' }
     if (typeof b.card !== 'string' || !B64URL.test(b.card)) return { ok: false, step: 2, reason: 'box card' }
     if (b.carriers !== undefined && (!Array.isArray(b.carriers) || b.carriers.length === 0 || b.carriers.length > 8 || b.carriers.some((x: unknown) => typeof x !== 'string' || !CARRIER.test(x)))) return { ok: false, step: 2, reason: 'box carriers' }
-    boxesClean.push({ p, claim, card: b.card, ...(b.carriers !== undefined ? { carriers: [...b.carriers] as string[] } : {}) })
+    boxesClean.push({ p: bp, claim, card: b.card, ...(b.carriers !== undefined ? { carriers: [...b.carriers] as string[] } : {}) })
   }
   if (c.attest !== undefined && (typeof c.attest !== 'string' || c.attest.length === 0 || c.attest.includes(':') || UNPRINTABLE.test(c.attest) || INVISIBLE.test(c.attest) || /\p{Z}/u.test(c.attest) || c.attest.length > 512)) return { ok: false, step: 2, reason: 'attest' }
   let bond: BondHandshake | undefined
   if (c.bond !== undefined) {
     try { bond = cleanBond(c.bond) } catch { return { ok: false, step: 2, reason: 'bond' } }
   }
-  if (!Number.isSafeInteger(c.issued) || !Number.isSafeInteger(c.expires)) return { ok: false, step: 3, reason: 'times' }
-  if (c.expires <= now) return { ok: false, step: 3, reason: 'expired' }
-  if (c.expires <= c.issued || c.expires - c.issued > MAX_AGE_SECONDS) return { ok: false, step: 3, reason: 'expiry window' }
-  if (c.issued > now + 300) return { ok: false, step: 3, reason: 'issued in the future' }
-  const unsigned: UnsignedCard = {
+  // Step 3: issued is the event's created_at, expires the expiration tag's value.
+  const issued = ev.created_at
+  if (!Number.isSafeInteger(issued) || !/^(0|[1-9][0-9]{0,15})$/.test(expTag[1]!)) return { ok: false, step: 3, reason: 'times' }
+  const expires = Number(expTag[1])
+  if (!Number.isSafeInteger(expires)) return { ok: false, step: 3, reason: 'times' }
+  if (expires <= now) return { ok: false, step: 3, reason: 'expired' }
+  if (expires <= issued || expires - issued > MAX_AGE_SECONDS) return { ok: false, step: 3, reason: 'expiry window' }
+  if (issued > now + 300) return { ok: false, step: 3, reason: 'issued in the future' }
+  // Step 4: the id over the six fields as carried, and the signature under p.
+  // The id and signature are returned lower-cased; the pubkey is inside the hashed serialisation, so a pubkey not already lower-case fails the id check.
+  const event: CardEvent = { kind: ev.kind, pubkey: ev.pubkey, created_at: issued, tags, content: ev.content, id, sig }
+  if (eventId(event) !== id || !schnorr.verify(hexToBytes(sig), hexToBytes(id), hexToBytes(p))) return { ok: false, step: 4, reason: 'signature' }
+  const card: Card = {
     v: 1,
-    p: hex.p,
+    p,
     rz: hex.rz,
     ...(c.name !== undefined ? { name: c.name as string } : {}),
-    issued: c.issued,
-    expires: c.expires,
+    issued,
+    expires,
     relays: [...c.relays] as string[],
     boxes: boxesClean,
     eph: hex.eph,
     ...(c.attest !== undefined ? { attest: c.attest as string } : {}),
     ...(bond ? { bond } : {}),
+    id,
+    sig,
+    event,
   }
-  if (!schnorr.verify(hexToBytes(sig), cardDigest(unsigned), hexToBytes(unsigned.p))) return { ok: false, step: 4, reason: 'signature' }
-  const card: Card = { ...unsigned, sig }
   const boxes: ReadOk['boxes'] = []
   for (const b of card.boxes) {
     let bytes: Uint8Array

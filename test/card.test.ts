@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import { schnorr } from '@noble/curves/secp256k1.js'
 import { ed25519 } from '@noble/curves/ed25519.js'
 import { bytesToHex, hexToBytes, randomBytes } from '@noble/hashes/utils.js'
-import { buildCard, readCard, encodeCard, cardLink, refreshBox, buildLinkCard, verifyLinkCard, handshakeBytes, cardDigest } from '../src/index.js'
+import { buildCard, buildCardWith, readCard, encodeCard, cardLink, refreshBox, buildLinkCard, verifyLinkCard, handshakeBytes, cardContent, eventId, CARD_KIND, type Card, type CardEvent } from '../src/index.js'
 
 const v = JSON.parse(readFileSync(new URL('../vectors/contact-card.json', import.meta.url), 'utf8'))
 
@@ -44,11 +44,26 @@ describe('build and read', () => {
     expect(r.boxes[0]!.link.relays).toEqual(['wss://relay.example'])
   })
   it('a tampered field fails the signature, a foreign key fails too', () => {
-    const t = { ...card, name: 'Eve' }
+    const t: CardEvent = { ...card.event, content: cardContent({ ...card, name: 'Eve' }) }
     expect(readCard(encodeCard(t), NOW)).toMatchObject({ ok: false, step: 4 })
     const stranger = randomBytes(32)
-    const forged = { ...card, sig: bytesToHex(schnorr.sign(cardDigest(card), stranger)) }
+    const forged: CardEvent = { ...card.event, sig: bytesToHex(schnorr.sign(hexToBytes(card.id), stranger)) }
     expect(readCard(encodeCard(forged), NOW)).toMatchObject({ ok: false, step: 4 })
+    const moved: CardEvent = { ...card.event, created_at: card.issued + 1 }
+    expect(readCard(encodeCard(moved), NOW)).toMatchObject({ ok: false, step: 4 })
+  })
+  it('a signer that only signs events makes the same card', async () => {
+    const signer = async (unsigned: { kind: number; pubkey: string; created_at: number; tags: string[][]; content: string }) => {
+      const id = eventId(unsigned)
+      return { ...unsigned, id, sig: bytesToHex(schnorr.sign(hexToBytes(id), identity)) }
+    }
+    const viaSigner = await buildCardWith(bytesToHex(schnorr.getPublicKey(identity)), signer, { rz: bytesToHex(schnorr.getPublicKey(rzSecret)), ephemeralPrivateKey: eph, name: 'Ada', relays: ['wss://relay.example'], boxes: [box], now: () => NOW })
+    expect(viaSigner.event.kind).toBe(CARD_KIND)
+    expect(viaSigner.p).toBe(card.p)
+    expect(readCard(cardLink('https://example.invalid/join', viaSigner), NOW).ok).toBe(true)
+    // A signer that alters what it was asked to sign is refused.
+    const liar = async (unsigned: { kind: number; pubkey: string; created_at: number; tags: string[][]; content: string }) => signer({ ...unsigned, tags: [...unsigned.tags, ['relay', 'wss://evil.example']] })
+    await expect(buildCardWith(card.p, liar, { rz: card.rz, ephemeralPrivateKey: eph, now: () => NOW })).rejects.toThrow(/changed the event/)
   })
   it('refreshes only under the pinned node id and rejects a stale serial', () => {
     const pinned = bytesToHex(ed25519.getPublicKey(node))
