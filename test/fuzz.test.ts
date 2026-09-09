@@ -90,7 +90,7 @@ describe('fuzz: link card and handshake', () => {
     }
   })
   it('handshakeBytes refuses bad keys without throwing anything but its own error', () => {
-    for (const p of [{ pubkey: 'x', nonce: 'y' }, { pubkey: 'a'.repeat(64), nonce: 'z' }, { pubkey: 'A'.repeat(64), nonce: 'b'.repeat(32) }] as any[]) {
+    for (const p of [{ pubkey: 'x', nonce: 'y' }, { pubkey: 'a'.repeat(64), nonce: 'z' }, { pubkey: 'g'.repeat(64), nonce: 'b'.repeat(32) }, { pubkey: 'a'.repeat(64), nonce: 'b'.repeat(32), personas: [{ pubkey: 5 }] }] as any[]) {
       expect(() => handshakeBytes(p)).toThrow(/handshake:/)
     }
   })

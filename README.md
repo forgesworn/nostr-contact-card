@@ -32,9 +32,12 @@ const fresh = refreshBox(pinnedNodeId, freshLinkCardBytes, now(), highestSerialS
 ```
 
 Vectors in `vectors/contact-card.json` are the draft's known-answer file:
-cards failing at each step, extra-key and format-character cases, and
-refresh cases including a small-order node id. A second implementation,
-written from the draft alone, must agree on every one.
+cards failing at each step, extra-key, format-character, surrogate,
+byte-order-mark, empty-field and expiry-window cases, and refresh cases
+including a small-order node id and a nonce point carrying torsion. A
+second implementation, written from the draft alone, must agree on every
+one; the vectors carry the expected `ok` and step, and a verifier that
+disagrees on either is wrong.
 
 ## What a card carries
 
@@ -54,18 +57,44 @@ ceremony.
 
 ## Security notes
 
-- `readCard` returns only the named fields, hex lower-cased, bond
-  canonicalised. Names, display names and persona labels are at most 100
-  code points with no control, format or separator characters.
-- Link cards are verified strictly: RFC 8032 signature checks, no ZIP-215
-  encodings, and a node id of small order is refused before the signature
-  is looked at. Relay hints must be valid UTF-8 `wss://` URLs and onion
-  hints a 56-character base32 host with a non-zero port; anything else
-  fails the card. A serial above 2^53 is refused rather than rounded.
+- `readCard` returns only the named fields, every hex field lower-cased
+  (bond and persona keys included), bond canonicalised. Names, display
+  names and persona labels pass `isGoodName`: 1 to 100 code points, at
+  least one visible, no control, surrogate, unassigned or private-use
+  character, no separator but an ordinary space and none at the ends, no
+  invisible or direction-changing format character, no run of five
+  combining marks; the joiners and tag characters emoji need are allowed
+  only beside a pictographic character. Empty strings are refused, because
+  an empty name or attest would hash the same as none.
+- The wire is decoded as strict UTF-8: a byte sequence that is not UTF-8,
+  or a leading byte-order mark, is not a card. Nothing decodes to U+FFFD.
+- Link cards are verified as libsodium and ed25519-dalek's `verify_strict`
+  do: canonical encodings only (no ZIP-215), a node id or nonce point of
+  small order refused, `S` below the group order, and the cofactorless
+  equation `[S]B = R + [k]A`. noble's own `verify` multiplies by the
+  cofactor and would accept a node id or nonce carrying torsion that a
+  strict verifier refuses, so the check is done by hand (`verifyStrict`).
+- Relay hints and card relays pass `isRelayUrl`: `wss://`, a URL with a
+  DNS name or IP literal as host, no credentials, no fragment, no comma, no
+  unprintable character, no byte-order mark. Onion hints are a 56-character
+  base32 host with a non-zero port. An ephemeral hint (kind 0x04) has a
+  compressed-point prefix. Kind 0x02 and unknown kinds come back in `hints`
+  exactly as the box wrote them; only `relays` and `onions` are checked
+  views. A serial above 2^53 is refused under rule 3, before the signature.
+- `now` must be a finite number of seconds and `highestSerial` an integer
+  or absent. Anything else fails closed; it never switches a check off.
 - Hex case is normalised and base64url padding tolerated, so one card has
-  several wire forms. Anything that caches or deduplicates on the encoded
-  string must key on the card's fields, not its bytes.
-- The size cap applies to the card, not the link it rides on.
+  several wire forms; so does any JSON re-serialisation. Anything that
+  caches or deduplicates on the encoded string must key on the card's
+  fields, not its bytes.
+- The size cap applies to the card, not the link it rides on. A contact
+  card's `issued` may be up to 300 seconds ahead of `now`, and `expires`
+  must be after `issued`.
+- Replay protection for a box's fresh Link cards is rule 8, and rule 8
+  needs the highest serial this client accepted for that node id. The
+  library pins nothing: persist `link.serial` per node id and pass it to
+  `refreshBox`; without it any unexpired old card of the same node is
+  accepted.
 
 ## Licence
 
