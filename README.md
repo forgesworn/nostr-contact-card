@@ -7,9 +7,12 @@
 
 **One QR or link that makes a stranger a contact, names their box, and starts a bond.**
 
-A contact card is a signed Nostr event of the reserved kind 30641, never
-posted to a relay, carried after `#` in a link or as the whole of a QR
-code. The event's pubkey is the person's key, its created_at is when the
+A contact card is a signed Nostr event of kind 21641, in the ephemeral
+range and never posted to a relay, carried after `#` in a link or as the
+whole of a QR code. The kind is ephemeral so that a relay which meets a
+card by mistake does not store it: a card carries a rendezvous key, a fresh
+ephemeral and a bond nonce, and a leaked one should not sit on a relay for
+thirty days. The event's pubkey is the person's key, its created_at is when the
 card was issued, its expiration tag is when it lapses, and its content is
 the card, so the signature is the one every signer already makes: an
 extension, a bunker or a key held locally all make the same card. It holds a person's key and name, their public
@@ -99,9 +102,9 @@ ceremony.
 - The signature is the event's, over its NIP-01 id, and the content is
   signed byte for byte as carried. A key the draft does not name never
   reaches the caller, whether it sits on the event outside the signature
-  or inside the signed content. The event carries exactly a `d` tag of
-  `card` and an `expiration` tag; a third tag is refused before the
-  signature is looked at. `buildCardWith` refuses a signer that returns
+  or inside the signed content. The event carries exactly one tag,
+  `expiration`; a second tag is refused before the signature is looked
+  at. `buildCardWith` refuses a signer that returns
   anything but the event it was asked to sign.
 - Hex case in the id and signature is normalised and base64url padding
   tolerated, so one card has several wire forms. Anything that caches or
