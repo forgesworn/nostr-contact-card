@@ -1,4 +1,5 @@
 import { schnorr } from '@noble/curves/secp256k1.js'
+import { base64urlnopad } from '@scure/base'
 import { sha256 } from '@noble/hashes/sha2.js'
 import { bytesToHex, hexToBytes, utf8ToBytes } from '@noble/hashes/utils.js'
 import { verifyLinkCard, type LinkCard } from './link-card.js'
@@ -43,9 +44,11 @@ export interface UnsignedCard {
 export interface Card extends UnsignedCard { sig: string }
 
 const HEX64 = /^[0-9a-f]{64}$/, HEX128 = /^[0-9a-f]{128}$/, HEX32 = /^[0-9a-f]{32}$/
+// base64url without padding, as the draft specifies; @scure/base is the
+// same family as the curves and hashes and runs in a browser.
 const b64url = {
-  encode: (b: Uint8Array) => Buffer.from(b).toString('base64url'),
-  decode: (s: string) => new Uint8Array(Buffer.from(s, 'base64url')),
+  encode: (b: Uint8Array) => base64urlnopad.encode(b),
+  decode: (s: string) => base64urlnopad.decode(s.replace(/=+$/, '')),
 }
 const sha256hex = (b: Uint8Array) => bytesToHex(sha256(b))
 
