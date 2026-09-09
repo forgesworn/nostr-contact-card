@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.0 (2026-09-09)
+
+### Features
+
+- build, read, link and refresh contact cards; verify the Link address card inside
+
+### Bug Fixes
+
+- second review pass on the card reader and the Link verifier
+- apply the independent review to readCard and the Link card verifier
+- base64url from scure, no Buffer in library source; node types for the tests
+
+
+
 ## 0.1.0
 
 - Second review pass (2026-09-09): `now` and `highestSerial` fail closed
