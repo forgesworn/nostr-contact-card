@@ -39,6 +39,14 @@
     "type": "git",
     "url": "https://github.com/forgesworn/nostr-contact-card"
   },
+  "homepage": "https://github.com/forgesworn/nostr-contact-card#readme",
+  "bugs": {
+    "url": "https://github.com/forgesworn/nostr-contact-card/issues"
+  },
+  "funding": {
+    "type": "lightning",
+    "url": "lightning:profusemeat89@walletofsatoshi.com"
+  },
   "engines": {
     "node": ">=22"
   },

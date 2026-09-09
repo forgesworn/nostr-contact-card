@@ -1,5 +1,10 @@
 # nostr-contact-card
 
+[![CI](https://github.com/forgesworn/nostr-contact-card/actions/workflows/ci.yml/badge.svg)](https://github.com/forgesworn/nostr-contact-card/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/nostr-contact-card)](https://www.npmjs.com/package/nostr-contact-card)
+[![licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](./LICENCE)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/TheCryptoDonkey?logo=githubsponsors&color=ea4aaa&label=Sponsor)](https://github.com/sponsors/TheCryptoDonkey)
+
 **One QR or link that makes a stranger a contact, names their box, and starts a bond.**
 
 A contact card is a small signed JSON object carried after `#` in a link or
