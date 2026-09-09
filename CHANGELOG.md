@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0 (2026-09-09)
+
+### Breaking
+
+- a card is kind 21641, in the ephemeral range, with one `expiration` tag; the addressable 30641 and its `d` tag are gone, and a card of that shape fails at step 1. Vectors v3, 33 cases.
+
+## 0.3.0 (2026-09-09)
+
+- a card is a signed Nostr event, so any signer makes one
+
 ## 0.3.0 (2026-09-09)
 
 ### Features
