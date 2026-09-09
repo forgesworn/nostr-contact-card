@@ -96,6 +96,15 @@ ceremony.
   `refreshBox`; without it any unexpired old card of the same node is
   accepted.
 
+## What remains
+
+In the profile's own words, from its table of what remains: a card is
+trusted on first use. An impostor who hands you a card is an impostor
+you have a contact for; what narrows that is not in this library but in
+how many independent channels confirm the key, shown as a count and never
+as a score, and a bond ceremony spoken live. Whoever holds a card holds
+its bond nonce, a bearer secret for the card's life.
+
 ## Licence
 
 MIT. ForgeSworn.
