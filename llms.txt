@@ -1,0 +1,73 @@
+# nostr-contact-card
+
+> Handing someone a QR code or a link should be enough to become a contact,
+> without a relay ever seeing who met whom. nostr-contact-card builds, signs,
+> reads and refreshes contact cards: signed Nostr events of kind 21641, in
+> the ephemeral range, carried after `#` in a link or as the whole of a QR
+> code so a relay that meets one by mistake does not store it.
+
+For developers building Nostr clients or wallets that want an in-person or
+link-based way to exchange a contact: a person's key and name, their public
+relays, a box (a Link address card the person's signature endorses), a
+rendezvous key and fresh ephemeral for deriving private rendezvous material,
+and a bond handshake so an in-person ceremony can start from the card.
+Reading a card needs nothing from the network: five checks run in order, and
+the result names the step that failed.
+
+## Getting Started
+
+```ts
+import { buildCard, buildCardWith, cardLink, readCard, refreshBox } from 'nostr-contact-card'
+
+const card = buildCard({ identityPrivateKey, rz, ephemeralPrivateKey, name: 'Ada', relays, boxes: [box], bond })
+// or, through a signer that holds the key (NIP-07, NIP-46):
+const viaSigner = await buildCardWith(pubkey, (unsigned) => signer.signEvent(unsigned), { rz, ephemeralPrivateKey, name: 'Ada', relays, boxes: [box] })
+const link = cardLink('https://your.app/join', card)     // the server never sees the fragment
+
+const r = readCard(scannedText, now())
+if (!r.ok) show(r.step, r.reason)
+else { addContact(r.card.p, r.card.name); for (const b of r.boxes) dial(b.link, b.box.p) }
+```
+
+## Key Concepts
+
+- **Card**: a signed Nostr event of `CARD_KIND` (21641). `pubkey` is the
+  person's key, `created_at` is when it was issued, the `expiration` tag is
+  when it lapses, and `content` is the card.
+- **Box**: a Link address card, carried opaquely inside the contact card,
+  that the person's signature endorses; dialling it is on the person's own
+  word.
+- **Bond handshake**: a bearer secret for the card's life that starts an
+  in-person ceremony; whoever holds the link holds the bond.
+- **Rendezvous key and ephemeral**: a card carries neither the reader's own
+  secret nor derivation material, so holding a card alone cannot derive
+  rendezvous material from it (derivation lives in nostr-deaddrop).
+- **Link card**: the box's own signed card, verified with a cofactorless,
+  strict ed25519 check (`verifyStrict`) rather than noble's cofactored
+  `verify`, so a node id or nonce point carrying torsion is refused.
+
+## API Surface
+
+- `buildCard(options)` / `buildCardWith(pubkey, signEvent, options)`: build
+  and sign a card, either from a raw private key or through a signer (NIP-07,
+  NIP-46).
+- `encodeCard(card)` / `cardLink(base, card)`: encode a card to its wire form
+  or a full link with the card carried after `#`.
+- `readCard(encoded, now)`: verify and decode a card, returning the named
+  fields plus the event and its boxes, or the failing step and reason.
+- `refreshBox(pinnedNodeId, freshCardBytes, now, highestSerial?)`: accept a
+  fresh Link card for a box only under the node id first read.
+- `verifyLinkCard(bytes, now, highestSerial?)` / `buildLinkCard(options)`:
+  verify or build the Link card carried inside a box.
+- `isRelayUrl`, `isGoodName`, `verifyStrict`, `cleanBond`, `handshakeBytes`,
+  `eventId`, `cardContent`, `cardEvent`: the checks and helpers the above are
+  built from.
+- Limits as constants: `CARD_KIND`, `MAX_CARD_BYTES`, `MAX_AGE_SECONDS`,
+  `MAX_RELAYS`, `MAX_BOXES`, `MAX_NAME`, `MAX_PERSONAS`, `LINK_CARD_MAX`,
+  `LINK_CARD_MIN`, `LINK_CARD_MAX_AGE`.
+
+## Optional
+
+- Full API and security notes: README.md
+- Known-answer vectors for a second implementation: vectors/contact-card.json
+- Changelog: CHANGELOG.md
