@@ -30,6 +30,12 @@ the box is accepted only under the node id they endorsed, which the client
 pins from the first read (the Link card inside a contact card lasts seven
 days, the card itself thirty, so a client keeps the node id it read).
 
+## Install
+
+```bash
+npm install nostr-contact-card
+```
+
 ```ts
 import { buildCard, buildCardWith, cardLink, readCard, refreshBox } from 'nostr-contact-card'
 
