@@ -16,17 +16,70 @@ the result names the step that failed.
 
 ## Getting Started
 
+ESM only; Node >=22 or a browser; every time is Unix seconds, never
+`Date.now()` milliseconds. The noble and scure imports are this package's own
+runtime dependencies.
+
 ```ts
-import { buildCard, buildCardWith, cardLink, readCard, refreshBox } from 'nostr-contact-card'
+import { schnorr } from '@noble/curves/secp256k1.js'
+import { bytesToHex, hexToBytes, randomBytes } from '@noble/hashes/utils.js'
+import { base64urlnopad } from '@scure/base'
+import {
+  buildCard, buildCardWith, buildLinkCard, cardLink, eventId, readCard, refreshBox,
+  type Box, type UnsignedCardEvent,
+} from 'nostr-contact-card'
+
+const now = Math.floor(Date.now() / 1000)   // Unix seconds, not Date.now() milliseconds
+const sixDays = 6 * 24 * 3600
+
+// The box's side. A client receives these; they are made here so the example runs.
+const nodeSecret = randomBytes(32)          // the box's Ed25519 node key
+const linkCardBytes = buildLinkCard({ nodeSecret, issuedAt: now, expiresAt: now + sixDays, serial: 1, relays: ['wss://relay.example.org'] })
+const box: Box = {
+  p: bytesToHex(schnorr.getPublicKey(randomBytes(32))),   // the box's own x-only key, 64 hex characters
+  claim: '00'.repeat(32),                                 // the box's binding event id, 64 hex (a placeholder here)
+  card: base64urlnopad.encode(linkCardBytes),             // its Link card, base64url without padding
+}
+
+// Your side.
+const identityPrivateKey = randomBytes(32)
+const pubkey = bytesToHex(schnorr.getPublicKey(identityPrivateKey))
+const rz = bytesToHex(schnorr.getPublicKey(randomBytes(32)))   // a stand-in: use your rendezvous key (see nostr-deaddrop)
+const ephemeralPrivateKey = randomBytes(32)                    // fresh for each card; only its public half is carried
+const relays = ['wss://relay.example.org']
+const bond = { pubkey, displayName: 'Ada', nonce: bytesToHex(randomBytes(16)) }   // nonce: 32 hex characters
 
 const card = buildCard({ identityPrivateKey, rz, ephemeralPrivateKey, name: 'Ada', relays, boxes: [box], bond })
-// or, through a signer that holds the key (NIP-07, NIP-46):
-const viaSigner = await buildCardWith(pubkey, (unsigned) => signer.signEvent(unsigned), { rz, ephemeralPrivateKey, name: 'Ada', relays, boxes: [box] })
-const link = cardLink('https://your.app/join', card)     // the server never sees the fragment
 
-const r = readCard(scannedText, now())
-if (!r.ok) show(r.step, r.reason)
-else { addContact(r.card.p, r.card.name); for (const b of r.boxes) dial(b.link, b.box.p) }
+// Or through a signer that holds the key. This one stands in for NIP-07
+// (window.nostr.signEvent) or NIP-46; any function from unsigned event to signed event will do.
+const signEvent = async (unsigned: UnsignedCardEvent) => {
+  const id = eventId(unsigned)
+  return { ...unsigned, id, sig: bytesToHex(schnorr.sign(hexToBytes(id), identityPrivateKey)) }
+}
+const viaSigner = await buildCardWith(pubkey, signEvent, { rz, ephemeralPrivateKey, name: 'Ada', relays, boxes: [box] })
+
+const url = cardLink('https://your.app/join', card)   // the card rides after #, which a server never sees
+
+// The reader's side.
+const r = readCard(url, now)                          // the whole link, or just the text after '#'
+if (!r.ok) throw new Error(`not a card: step ${r.step}, ${r.reason}`)
+console.log(r.card.p, r.card.name)
+
+// Pin each box's node id with the highest serial seen for it, and persist both.
+const highestSerial = new Map<string, number>()
+for (const b of r.boxes) {
+  console.log(b.box.p, b.link.nodeId, b.link.relays, b.link.onions)   // dial b.link.relays or b.link.onions
+  highestSerial.set(b.link.nodeId, b.link.serial)
+}
+
+// Later the box sends a fresh Link card (serial 2). Accept it only under the pinned node id.
+const later = now + 3600
+const freshBytes = buildLinkCard({ nodeSecret, issuedAt: later, expiresAt: later + sixDays, serial: 2, relays: ['wss://relay.example.org'] })
+const nodeId = r.boxes[0]!.link.nodeId
+const fresh = refreshBox(nodeId, freshBytes, later, highestSerial.get(nodeId))
+if (fresh.ok) highestSerial.set(nodeId, fresh.link.serial)
+else console.error(fresh.reason)
 ```
 
 ## Key Concepts
@@ -37,37 +90,72 @@ else { addContact(r.card.p, r.card.name); for (const b of r.boxes) dial(b.link, 
 - **Box**: a Link address card, carried opaquely inside the contact card,
   that the person's signature endorses; dialling it is on the person's own
   word.
-- **Bond handshake**: a bearer secret for the card's life that starts an
-  in-person ceremony; whoever holds the link holds the bond.
-- **Rendezvous key and ephemeral**: a card carries neither the reader's own
-  secret nor derivation material, so holding a card alone cannot derive
-  rendezvous material from it (derivation lives in nostr-deaddrop).
-- **Link card**: the box's own signed card, verified with a cofactorless,
-  strict ed25519 check (`verifyStrict`) rather than noble's cofactored
-  `verify`, so a node id or nonce point carrying torsion is refused.
+- **Bond handshake**: `{ pubkey, nonce, displayName?, personas? }`, the nonce
+  32 hex characters: a bearer secret for the card's life that starts an
+  in-person ceremony; whoever holds the link holds the bond. A persona is an
+  extra `{ pubkey, label? }` the bond offers; `attest` is an optional
+  attestation pointer string on the card. The README's Terms section defines
+  each, and the hint kinds 0x01 to 0x04 of a Link card.
+- **Rendezvous key and ephemeral**: a card carries `rz`, the rendezvous
+  public key, and `eph`, the public half of a fresh ephemeral, as inputs to
+  derivation. It carries neither the reader's own secret nor the ephemeral's
+  private half, so holding a card alone cannot derive rendezvous material
+  from it (derivation lives in
+  [nostr-deaddrop](https://github.com/forgesworn/nostr-deaddrop)).
+- **Link card**: the box's own signed card (`FSL-CARD-1`, forgesworn-link
+  SPEC §2), verified with a cofactorless, strict ed25519 check
+  (`verifyStrict`) rather than noble's cofactored `verify`, so a node id or
+  nonce point carrying torsion is refused. Its eight verification rules are
+  numbered in the README; `verifyLinkCard` returns the failing `rule`.
+- **Time**: every `now`, `issued` and `expires` is Unix seconds. A
+  millisecond value makes every card read as expired.
 
 ## API Surface
 
-- `buildCard(options)` / `buildCardWith(pubkey, signEvent, options)`: build
-  and sign a card, either from a raw private key or through a signer (NIP-07,
-  NIP-46).
-- `encodeCard(card)` / `cardLink(base, card)`: encode a card to its wire form
-  or a full link with the card carried after `#`.
-- `readCard(encoded, now)`: verify and decode a card, returning the named
-  fields plus the event and its boxes, or the failing step and reason.
-- `refreshBox(pinnedNodeId, freshCardBytes, now, highestSerial?)`: accept a
-  fresh Link card for a box only under the node id first read.
-- `verifyLinkCard(bytes, now, highestSerial?)` / `buildLinkCard(options)`:
-  verify or build the Link card carried inside a box.
-- `isRelayUrl`, `isGoodName`, `verifyStrict`, `cleanBond`, `handshakeBytes`,
-  `eventId`, `cardContent`, `cardEvent`: the checks and helpers the above are
-  built from.
-- Limits as constants: `CARD_KIND`, `MAX_CARD_BYTES`, `MAX_AGE_SECONDS`,
-  `MAX_RELAYS`, `MAX_BOXES`, `MAX_NAME`, `MAX_PERSONAS`, `LINK_CARD_MAX`,
-  `LINK_CARD_MIN`, `LINK_CARD_MAX_AGE`.
+Signatures and shapes below; the README's API section has the full types and
+its Terms, "How a card is read" and "Link card rules" sections list the five
+`readCard` steps and Link card rules 1 to 9.
+
+- `buildCard(o: BuildOptions): Card` and
+  `buildCardWith(p: string, signEvent: SignEvent, o: Omit<BuildOptions, 'identityPrivateKey'>): Promise<Card>`:
+  build and sign a card, from a raw private key or through a signer (NIP-07,
+  NIP-46). `BuildOptions` is `{ identityPrivateKey, rz, ephemeralPrivateKey,
+  name?, relays?, boxes?, attest?, bond?, ttlSeconds?, now?: () => number }`.
+  Both throw when the card would not read back.
+- `encodeCard(card: Card | CardEvent): string` and
+  `cardLink(base: string, card: Card | CardEvent): string`: the wire form, or
+  a link with the card carried after `#`.
+- `readCard(encoded: string, now: number): ReadResult`, where `ReadResult` is
+  `{ ok: true, card: Card, boxes: { box: Box, link: LinkCard }[] }` or
+  `{ ok: false, step: 1 | 2 | 3 | 4 | 5, reason: string }`. The node id to
+  pin for a box is `boxes[i].link.nodeId`; persist `boxes[i].link.serial`
+  with it. `encoded` may be the whole link or the text after `#`.
+- `refreshBox(pinnedNodeId: string | Uint8Array, freshCard: Uint8Array, now: number, highestSerial?: number)`:
+  returns `{ ok: true, link: LinkCard }` or `{ ok: false, reason: string }`.
+  Accepts a fresh Link card only under the node id first read. Always pass
+  the highest serial accepted for that node id: omitting it switches replay
+  protection (rule 8) off, so any unexpired old card of the node is accepted.
+- `verifyLinkCard(bytes: Uint8Array, now: number, highestSerial?: number): LinkVerdict`,
+  where `LinkVerdict` is `{ ok: true, card: LinkCard }` or
+  `{ ok: false, rule: number, reason: string }`, and
+  `buildLinkCard({ nodeSecret, issuedAt, expiresAt, serial, relays?, onions?, ephemeral? }): Uint8Array`
+  (for boxes and tests). `LinkCard` is `{ nodeId, issuedAt, expiresAt,
+  serial, hints, relays, onions }`.
+- `isRelayUrl(s: string): boolean`, `isGoodName(s: unknown): s is string`,
+  `verifyStrict(sig: Uint8Array, msg: Uint8Array, pk: Uint8Array): boolean`,
+  `cleanBond(p: unknown): BondHandshake` (throws `handshake: ...`),
+  `handshakeBytes(p: BondHandshake): Uint8Array`,
+  `eventId(ev: UnsignedCardEvent): string`,
+  `cardContent(c: Omit<UnsignedCard, 'p' | 'issued' | 'expires'>): string`,
+  `cardEvent(c: UnsignedCard): UnsignedCardEvent`: the checks and helpers the
+  above are built from.
+- Limits as constants: `CARD_KIND` 21641, `MAX_CARD_BYTES` 16384,
+  `MAX_AGE_SECONDS` 2592000, `MAX_RELAYS` 8, `MAX_BOXES` 4, `MAX_NAME` 100,
+  `MAX_PERSONAS` 16, `LINK_CARD_MAX` 4096, `LINK_CARD_MIN` 126,
+  `LINK_CARD_MAX_AGE` 604800.
 
 ## Optional
 
-- Full API and security notes: README.md
+- API reference, terms, the five read steps, Link card rules and security notes: README.md
 - Known-answer vectors for a second implementation: vectors/contact-card.json
 - Changelog: CHANGELOG.md

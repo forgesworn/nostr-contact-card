@@ -16,7 +16,8 @@
     "dist",
     "vectors/contact-card.json",
     "LICENCE",
-    "llms.txt"
+    "llms.txt",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

@@ -4,7 +4,7 @@ Builds, signs, reads and refreshes Nostr contact cards: signed events of
 kind 21641, in the ephemeral range and never posted to a relay, carried
 after `#` in a link or as the whole of a QR code. Zero runtime
 dependencies beyond `@noble/curves`, `@noble/hashes` and `@scure/base`;
-targets Node >=22 and browsers.
+ESM only, targets Node >=22 and browsers.
 
 ## Build & Test
 
@@ -49,6 +49,11 @@ vectors/          known-answer vectors for a second implementation
   failure reports; the vectors pin both the `ok` result and the step.
 - Do not change the vectors in `vectors/contact-card.json`; they are the
   draft's known-answer file, not test fixtures to adjust for convenience.
+- Every time (`now`, `issued`, `expires`) is Unix seconds. `Date.now()`
+  milliseconds are finite, so no check refuses them; every card then reads
+  as expired.
+- Documentation examples must define every variable and use only exports
+  from `src/index.ts`; the README API section lists them with signatures.
 - `refreshBox` needs the highest serial the client already accepted for a
   node id; without it, any unexpired old Link card of that node is
   accepted.
