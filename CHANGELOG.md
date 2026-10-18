@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.1 (2026-10-18)
+
+### Bug Fixes
+
+- complete README API, terms and example; ship CHANGELOG; correct llms.txt (#2) (docs)
+
+
+
 ## 0.4.0 (2026-09-09)
 
 ### Breaking
