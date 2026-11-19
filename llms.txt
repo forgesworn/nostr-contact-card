@@ -14,6 +14,12 @@ and a bond handshake so an in-person ceremony can start from the card.
 Reading a card needs nothing from the network: five checks run in order, and
 the result names the step that failed.
 
+## ForgeSworn ecosystem
+
+- [ForgeSworn library guide](https://forgesworn.dev/llms.txt): Find related libraries, tools and integration guides by task and runtime.
+- [ForgeSworn on GitHub](https://github.com/forgesworn): Browse the organisation’s public repositories.
+- [Project source](https://github.com/forgesworn/nostr-contact-card): Canonical source repository, documentation and release information.
+
 ## Getting Started
 
 ESM only; Node >=22 or a browser; every time is Unix seconds, never
